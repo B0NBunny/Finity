@@ -1,6 +1,6 @@
 # Finity
 Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and customisable GUI for their users.
-(This was originaly created by a user on <a href="https://v3rmillion.net/showthread.php?tid=922755">V3RMillion</a> but they have since abondoned it)
+(This was originaly created by a user on V3RMillion but they have since abondoned it)
 
 # Finity's Features 
 <ol>
@@ -35,4 +35,10 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 
 <p align="center">
   <a href="https://localsmail.gitbook.io/finity-docs">Click me to view the docs</a>
+</p>
+
+# Join the community!
+
+<p align=centre>
+   <a href="https://discord.gg/XHhgnj5Vq8">Join our Discord Community and be notified on community polls for new features and support!</a>
 </p>
