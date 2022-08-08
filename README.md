@@ -40,5 +40,5 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 # Join the community!
 
 <p align=centre>
-   <a href="https://discord.gg/XHhgnj5Vq8">Join our Discord Community and be notified on community polls for new features and support!</a>
+   <a href="https://discord.gg/CenXcThBFv">Join our Discord Community and be notified on community polls for new features and support!</a>
 </p>
