@@ -1,0 +1,56 @@
+--[[
+
+Heres an exaple for the Finity Gui Lib :D
+
+]]
+
+
+local Finity = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/Library"))()
+
+local FinityWindow = Finity.new("Title", true, true, "3") -- Creates the window
+
+local PlayerSettingsCategory = FinityWindow:Category("Player Settings") -- Makes a button on your left
+
+local PlayerSettings = PlayerSettingsCategory:Sector("Player Settings | Configure them here") -- Adds sections inside the category, Name Optional
+
+local PlayerSpeed = PlayerSettings:Cheat("slider", "Player Speed", function (Value)
+    print("Player speed is now: "..Value)
+
+    local plr = game.Players.LocalPlayer
+    plr.Character.Humanoid.WalkSpeed = Value
+
+end, {min = 0, max = 1500, suffix = " Player Speed "}) --Sets parameters for the minimum and maximum amount the player can set
+-- Suffix is the text that appears next to the value on the right
+
+local SpoofName = PlayerSettings:Cheat("Textbox", "New Player Name (LOCAL)", function(Value)
+	local plr = game.Players.LocalPlayer
+    local name = Value
+
+    print(name)
+    
+    plr.Name = name
+end, { placeholder = "Player Name" })
+
+local Toggle = PlayerSettings:Cheat("Dropdown", "Toggle", function(Option)
+	print("Dropdown option changed:", Option)
+end, { options = { "FOV", "Distance", "Visibility" }, suffix = "Toggle"})
+
+local CheckBox = PlayerSettings:Cheat("Checkbox", "Check Box", function(State) 
+    print("Checkbox state changed:", State) 
+end)
+
+local CreditsCategory = FinityWindow:Category("Credits")
+
+-- Sectors lay them selfs out, It goes from left to right and the max is 2 on each row
+
+local CreditsMaintainer = CreditsCategory:Sector("Finity Library Maintainer")
+
+CreditsMaintainer:Cheat("Label", "LocalSmail | Github")
+CreditsMaintainer:Cheat("Label", "Antwan#5152 | Discord.gg/ZjDYXYbwkU")
+
+-- Original dev who left it to die :(
+
+local CreditsCreator = CreditsCategory:Sector("Finity Library Creator")
+CreditsCreator:Cheat("Label", "detourious | v3rmillion.net")
+CreditsCreator:Cheat("Label", "deto#7612")
+
