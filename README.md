@@ -37,6 +37,10 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
   <a href="https://localsmail.gitbook.io/finity-docs">Click me to view the docs</a>
 </p>
 
+# Support me!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H8EBP1U)
+
 # Join the community!
 
 <p align=centre>
