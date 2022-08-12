@@ -5,18 +5,18 @@ local SentCredits = false
 
 local suc, err = pcall(function()
 
-if game.Loaded then
-	
-	print("Game Loaded!")
-	
-	task.wait(0)
-	
-	local version = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/version"))()
+	if game.Loaded then
+
+		print("Game Loaded!")
+
+		task.wait(0)
+
+		local version = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/version"))()
 
 		if not SentCredits then
-			
+
 			SentCredits = true
-			
+
 			print([[
 
 			 _____ ___ _   _ ___ _______   __
@@ -152,28 +152,28 @@ if game.Loaded then
 			shadow.Parent = object
 		end
 
-        function finity.ToastMessage(Header, Content, Time)
+		function finity.ToastMessage(Header, Content, Time)
 
-            if Header == nil or Header == "" then
-                Header = "No Header Provided"
-            end
+			if Header == nil or Header == "" then
+				Header = "No Header Provided"
+			end
 
-            if Content == nil or Content == "" then
-                Content = "No Content Provided"
-            end
+			if Content == nil or Content == "" then
+				Content = "No Content Provided"
+			end
 
-            if Time == nil or Time <= 0 then
-                Time = 5
-            end
-	
-            local StarterGui = game:GetService("StarterGui")
+			if Time == nil or Time <= 0 then
+				Time = 5
+			end
+
+			local StarterGui = game:GetService("StarterGui")
 
 			StarterGui:SetCore("SendNotification", {
 				Title = Header,
 				Text = Content,
 				Duration = Time
 			})
-        end
+		end
 
 
 		function finity.new(Title, isdark, HideToolTip, ToolTipText)
@@ -187,8 +187,6 @@ if game.Loaded then
 				return
 			end
 
-			local projectName = false
-			local thinMenu = false
 			local theme = finity.theme
 
 			if isdark == true then
@@ -196,9 +194,6 @@ if game.Loaded then
 			elseif isdark == false or isdark == nil then
 				theme = finity.theme
 			end
-
-			if gprojectName then projectName = gprojectName end
-			if thinProject then thinMenu = thinProject end
 
 			local toggled = true
 			local typing = false
@@ -291,10 +286,6 @@ if game.Loaded then
 			}) 
 
 			self2.modal.Parent = self2.userinterface; -- Sets the parent of the button
-
-			if thinProject and typeof(thinProject) == "UDim2" then
-				self2.container.Size = thinProject
-			end
 
 			self2.container.Draggable = true
 
@@ -458,21 +449,16 @@ if game.Loaded then
 					ZIndex = 2
 				})
 
-				if not thinProject then
-					category.R = finity:Create("Frame", {
-						Name = "R",
-						AnchorPoint = Vector2.new(1, 0),
-						BackgroundColor3 = Color3.new(1, 1, 1),
-						BackgroundTransparency = 1,
-						Position = UDim2.new(1, -10, 0, 3),
-						Size = UDim2.new(0.5, -20, 1, -3),
-						ZIndex = 2
-					})
-				end
-
-				if thinProject then
-					category.L.Size = UDim2.new(1, -20, 1, -3)
-				end
+				category.R = finity:Create("Frame", {
+					Name = "R",
+					AnchorPoint = Vector2.new(1, 0),
+					BackgroundColor3 = Color3.new(1, 1, 1),
+					BackgroundTransparency = 1,
+					Position = UDim2.new(1, -10, 0, 3),
+					Size = UDim2.new(0.5, -20, 1, -3),
+					ZIndex = 2
+				})
+			end
 
 				if firstCategory then
 					finity.gs["TweenService"]:Create(category.hider, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
@@ -536,17 +522,13 @@ if game.Loaded then
 				category.container.Parent = self2.categories
 				category.button.Parent = self2.sidebar
 
-				if not thinProject then
-					category.R.Parent = category.container
-				end
+				category.R.Parent = category.container
+				
 
 				category.L.Parent = category.container
 				category.hider.Parent = category.container
 
 				local function calculateSector()
-					if thinProject then
-						return "L"
-					end
 
 					local R = #category.R:GetChildren() - 1
 					local L = #category.L:GetChildren() - 1
@@ -1316,7 +1298,7 @@ if game.Loaded then
 								cheat.visiframe.Parent = cheat.sliderbar
 								cheat.numbervalue.Parent = cheat.sliderbar
 								cheat.sliderbar.Parent = cheat.container
-								
+
 							elseif string.lower(kind) == "button" then
 								local button_text = data and data.text
 
@@ -1561,7 +1543,7 @@ if game.Loaded then
 			self2.categories.ClipsDescendants = true
 
 			if not finity.gs["RunService"]:IsStudio() then
-				
+
 				self2.userinterface.Parent = self.gs["CoreGui"]
 			else
 				self2.userinterface.Parent = self.gs["Players"].LocalPlayer:WaitForChild("PlayerGui")
@@ -1577,7 +1559,7 @@ if game.Loaded then
 		end
 
 	elseif not game.Loaded then repeat until game.Loaded end
-	
+
 end)
 
 if not suc then print(err) end
