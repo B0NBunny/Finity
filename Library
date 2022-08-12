@@ -153,6 +153,19 @@ if game.Loaded then
 		end
 
         function finity.ToastMessage(Header, Content, Time)
+
+            if Header == nil or Header == "" then
+                Header = "No Header Provided"
+            end
+
+            if Content == nil or Content == "" then
+                Content = "No Content Provided"
+            end
+
+            if Time == nil or Time <= 0 then
+                Time = 5
+            end
+	
             local StarterGui = game:GetService("StarterGui")
 
 			StarterGui:SetCore("SendNotification", {
