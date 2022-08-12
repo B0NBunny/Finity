@@ -283,12 +283,9 @@ if game.Loaded then
 				self2.container.Size = thinProject
 			end
 
-			-- Should fix issue with the GUI Not being draggable...
-			if not self2.container.Draggable or self2.container.Draggable == nil then
-				self2.container.Draggable = true
-			end
+			self2.container.Draggable = true
 
-			self2.container.Active = false
+			self2.container.Active = true -- this was set to false thats why it wasnt being draggable >:(
 
 			self2.sidebar = self:Create("Frame", {
 				Name = "Sidebar",
