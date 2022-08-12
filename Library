@@ -152,6 +152,16 @@ if game.Loaded then
 			shadow.Parent = object
 		end
 
+        function finity.ToastMessage(Header, Content, Time)
+            local StarterGui = game:GetService("StarterGui")
+
+			StarterGui:SetCore("SendNotification", {
+				Title = Header,
+				Text = Content,
+				Duration = Time
+			})
+        end
+
 
 		function finity.new(Title, isdark, HideToolTip, ToolTipText)
 
