@@ -4,7 +4,7 @@ You may fork this project but may only use it for personal use, If you want to c
 
 The following applies to older and future version of this Library.
 
-- You may not make money off this in any way.
+- You may not make money off this in any way. (I dont mind if you use this inside a paid script hub but just please credit me instead.)
 - You may make it a personal project but MUST give credit to by Crediting this source in the top of your read me and MUST not remove the print for the finity logo.
 - You may edit the fork of this but MUST follow the above expectations/requirements but you MUST not claim this as your own in anyway apart for adding xyz to the fork
 
