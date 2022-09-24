@@ -56,3 +56,7 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 <p align=centre>
    <a href="https://discord.gg/CenXcThBFv">Join our Discord Community and be notified on community polls for new features and support!</a>
 </p>
+
+# Credits
+
+Credits to [VapeV4](https://github.com/7GrandDadPGN/VapeV4ForRoblox/) for the notification icons and also a bit of the code.
