@@ -4,9 +4,9 @@ You may fork this project but may only use it for personal use, If you want to c
 
 The following applies to older and future version of this Library.
 
-- You may not make money off this in any way. (I dont mind if you use this inside a paid script hub but just please credit me instead.)
-- You may make it a personal project but MUST give credit to by Crediting this source in the top of your read me and MUST not remove the print for the finity logo.
-- You may edit the fork of this but MUST follow the above expectations/requirements but you MUST not claim this as your own in anyway apart for adding xyz to the fork
+- You may not make money off this in any way, If you use this inside any paid script hubs then this will not apply until otherwise.
+- You may make it a personal project but MUST give credit, You can do this by crediting us in the top, middle or bottom of your read me and MUST not remove the prints that give credits.
+- You may edit the fork of this but MUST follow the above expectations/requirements and you MUST not claim this as your own in anyway apart for adding xyz to the fork as that is your own work, Anything other than your own work/modifications will belong to the Finity Github repository: https://github.com/LocalSmail/Finity/
 
 # Finity
 Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and customisable GUI for their users.
