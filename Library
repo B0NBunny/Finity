@@ -1,125 +1,242 @@
 local finity = {}
 finity.gs = {}
 
-local SentCredits = false
+local finityObject = {}
+local self2 = finityObject
+local self = finity
+
+local Version = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/version"))()
+local Discord = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/discord"))()
+
+local custom_Themes
+
+if writefile then
+elseif not writefile then
+	print("Your executor does not support the writefile() function. We do not support your injector.")
+end
+
+-- Here we will make the folders needed by finity which will store data/assets.
+local DFAA = function()
+	makefolder('FinityGUI')
+	makefolder('FinityGUI/assets')
+	makefolder('FinityGUI/assets/custom') -- stores third part assets
+	writefile('FinityGUI/FinityDosAndDonts.txt', [[You may fork this project but may only use it for personal use, If you want to contribute to this project please open a Suggestion inside the discord and submit it there.
+
+The following applies to older and future version of this Library.
+
+You may not make money off this in any way, If you use this inside any paid script hubs then this will not apply until otherwise.
+You may make it a personal project but MUST give credit, You can do this by crediting us in the top, middle or bottom of your read me and MUST not remove the prints that give credits.
+You may edit the fork of this but MUST follow the above expectations/requirements and you MUST not claim this as your own in anyway apart for adding xyz to the fork as that is your own work, Anything other than your own work/modifications will belong to the Finity Github repository: https://github.com/LocalSmail/Finity/]])
+
+	-- a template for the support that is to come
+	writefile('FinityGUI/Customthemes.lua', [[
+Custom_Finity_Theme = {}
+
+Custom_Finity_Theme.CustomThemes = {
+	["Theme"] = {} -- add your custom theme stuff inside here
+	-- To make multiple just add a comma and do the samething below
+}
+
+return Custom_Finity_Theme]])
+
+	-- Downloads the files from the github to the assets folder
+
+	local Asset_Names = {
+		"Arrow.png",
+		"CheatBackground.png",
+		"CheatBoxStuff.png",
+		"CheatList.png",
+		"CheatSliderbar.png",
+		"CheatVisiFrame.png",
+		"Disable.wav",
+		"DropDown.png",
+		"Enable.wav",
+		"HSVBar.png",
+		"InfoNotification.png",
+		"NotificationBar.png",
+		"ScrollBar.png",
+		"Success.png",
+		"WarningNotification.png",
+		"WindowBlur.png"
+	}
+
+	for i, v in Asset_Names do
+		writefile('FinityGUI/assets/'..v, game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v))
+	end
+
+end
+
+DFAA()
+
+function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
+	print("Downloading custom asset from: "..link)
+
+	if not IsCustomThemeFile then
+		writefile('FinityGUI/assets/custom/'..AssetName, game:HttpGet(link))
+
+	elseif IsCustomThemeFile and AssetName == nil or AssetName == "" or AssetName == " " then
+		print("Downloading custom Customtheme.lua file")
+		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+
+		-- Same as the function above just checks if the AssetName has a value just incase a random shitty error gets thrown
+	elseif IsCustomThemeFile and not AssetName == nil or not AssetName == "" or not AssetName == " " then
+		print("Downloading custom Customtheme.lua file.")
+		warn("Tip: You dont have to put anything inside the AssetName argument, We parse the file name by default!")
+		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+
+	end
+end
+
+local GetAssetFunc = function(path: string)
+	if identifyexecutor() == "KrnlIs" then
+		getcustomasset(path)
+	elseif identifyexecutor() == "Synapse" then
+		getsynasset(path)
+	elseif not identifyexecutor() == "Synapse" or not identifyexecutor() == "KrnlIs" then
+		print(identifyexecutor().."Is not supported.")
+	end
+
+	--[[if not isfile(path) then -- Not working, needs fixing. On todo
+		print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
+		DFAA()
+	end]]
+	return path
+end
+
+function finity.ImportCustomThemes(Theme_Name)
+	local CustomthemeScript = GetAssetFunc("FinityGUI/Customtheme.lua")
+	local t = loadfile(CustomthemeScript)
+
+	local themes = t.CustomThemes[Theme_Name]
+
+	for i, v in themes do
+		custom_Themes = themes
+	end
+end
+
+finity.themes = {
+
+	["Dark"] = {
+
+		main_container = Color3.fromRGB(32, 32, 33),
+		separator_color = Color3.fromRGB(63, 63, 65),
+
+		text_color = Color3.fromRGB(206, 206, 206),
+
+		category_button_background = Color3.fromRGB(63, 62, 65),
+		category_button_border = Color3.fromRGB(72, 71, 74),
+
+		checkbox_checked = Color3.fromRGB(132, 255, 130),
+		checkbox_outer = Color3.fromRGB(84, 81, 86),
+		checkbox_inner = Color3.fromRGB(132, 132, 136),
+
+		slider_color = Color3.fromRGB(177, 177, 177),
+		slider_color_sliding = Color3.fromRGB(132, 255, 130),
+		slider_background = Color3.fromRGB(88, 84, 90),
+		slider_text = Color3.fromRGB(177, 177, 177),
+
+		textbox_background = Color3.fromRGB(103, 103, 106),
+		textbox_background_hover = Color3.fromRGB(137, 137, 141),
+		textbox_text = Color3.fromRGB(195, 195, 195),
+		textbox_text_hover = Color3.fromRGB(232, 232, 232),
+		textbox_placeholder = Color3.fromRGB(135, 135, 138),
+
+		dropdown_background = Color3.fromRGB(88, 88, 91),
+		dropdown_text = Color3.fromRGB(195, 195, 195),
+		dropdown_text_hover = Color3.fromRGB(232, 232, 232),
+		dropdown_scrollbar_color = Color3.fromRGB(118, 118, 121),
+
+		button_background = Color3.fromRGB(103, 103, 106),
+		button_background_hover = Color3.fromRGB(137, 137, 141),
+		button_background_down = Color3.fromRGB(70, 70, 81),
+
+		scrollbar_color = Color3.fromRGB(118, 118, 121),
+
+		notification_warn = Color3.fromRGB(236, 129, 44),
+		notification_success = Color3.fromRGB(255,51,51),
+		notification_info = Color3.fromRGB(206, 206, 206),
+
+		enable_sfx = GetAssetFunc("FinityGUI/assets/Enable.wav"),
+		disable_sfx = GetAssetFunc("FinityGUI/assets/Disable.wav")
+
+	},
+
+	["Light"] = {
+
+		main_container = Color3.fromRGB(249, 249, 255),
+		separator_color = Color3.fromRGB(223, 219, 228),
+
+		text_color = Color3.fromRGB(96, 96, 96),
+
+		category_button_background = Color3.fromRGB(223, 219, 228),
+		category_button_border = Color3.fromRGB(200, 196, 204),
+
+		checkbox_checked = Color3.fromRGB(114, 214, 112),
+		checkbox_outer = Color3.fromRGB(198, 189, 202),
+		checkbox_inner = Color3.fromRGB(249, 239, 255),
+
+		slider_color = Color3.fromRGB(114, 214, 112),
+		slider_color_sliding = Color3.fromRGB(114, 214, 112),
+		slider_background = Color3.fromRGB(198, 188, 202),
+		slider_text = Color3.fromRGB(112, 112, 112),
+
+		textbox_background = Color3.fromRGB(198, 189, 202),
+		textbox_background_hover = Color3.fromRGB(215, 206, 227),
+		textbox_text = Color3.fromRGB(112, 112, 112),
+		textbox_text_hover = Color3.fromRGB(50, 50, 50),
+		textbox_placeholder = Color3.fromRGB(178, 178, 178),
+
+		dropdown_background = Color3.fromRGB(198, 189, 202),
+		dropdown_text = Color3.fromRGB(112, 112, 112),
+		dropdown_text_hover = Color3.fromRGB(50, 50, 50),
+		dropdown_scrollbar_color = Color3.fromRGB(198, 189, 202),
+
+		button_background = Color3.fromRGB(198, 189, 202),
+		button_background_hover = Color3.fromRGB(215, 206, 227),
+		button_background_down = Color3.fromRGB(178, 169, 182),
+
+		scrollbar_color = Color3.fromRGB(198, 189, 202),
+
+		notification_warn = Color3.fromRGB(236, 129, 44),
+		notification_success = Color3.fromRGB(255,51,51),
+		notification_info = Color3.fromRGB(206, 206, 206),
+
+		enable_sfx = GetAssetFunc("FinityGUI/assets/Enable.wav"),
+		disable_sfx = GetAssetFunc("FinityGUI/assets/Disable.wav")
+
+	}
+}
+
+local theme = finity.themes["Dark"]
+
+-- Pretty much just sets the table to `game:GetService`
+setmetatable(finity.gs, {
+	__index = function(_, service)
+		return game:GetService(service)
+	end,
+
+	__newindex = function(t, i)
+		t[i] = nil
+		return
+	end
+})
 
 local suc, err = pcall(function()
 
-if game.Loaded then
-	
-	print("Game Loaded!")
-	
-	task.wait(0)
-	
-	local version = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/version"))()
+	if game.Loaded then
 
-		if not SentCredits then
-			
-			SentCredits = true
-			
-			print([[
+		print([[
+		_____ ___ _   _ ___ _______   __
+		|  ___|_ _|  | |_ _|_   _  / /
+		| |_   | ||  | || |  | |   V /
+		|  _|  | || |  || |  | |   | |
+		|_|   |___|_| _|___| |_|   |_|
 
-			 _____ ___ _   _ ___ _______   __
-			|  ___|_ _| \ | |_ _|_   _\ \ / /
-			| |_   | ||  \| || |  | |  \ V /
-			|  _|  | || |\  || |  | |   | |
-			|_|   |___|_| \_|___| |_|   |_|
+		]])
 
-			]])
-
-			local Discord = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/discord"))()
-
-			print("You are using Finity version "..version)
-			print("")
-			warn("Use our Documentation if you're new to Finity!")
-			warn("Docs: https://localsmail.gitbook.io/finity-docs/")
-			print("")
-			print("If you want Help, Found a Bug, Have a suggestion or Just enjoy Finity, Join our Discord Community: "..Discord.." :D")
-
-		end
-
-		finity.theme = { -- light
-			main_container = Color3.fromRGB(249, 249, 255),
-			separator_color = Color3.fromRGB(223, 219, 228),
-
-			text_color = Color3.fromRGB(96, 96, 96),
-
-			category_button_background = Color3.fromRGB(223, 219, 228),
-			category_button_border = Color3.fromRGB(200, 196, 204),
-
-			checkbox_checked = Color3.fromRGB(114, 214, 112),
-			checkbox_outer = Color3.fromRGB(198, 189, 202),
-			checkbox_inner = Color3.fromRGB(249, 239, 255),
-
-			slider_color = Color3.fromRGB(114, 214, 112),
-			slider_color_sliding = Color3.fromRGB(114, 214, 112),
-			slider_background = Color3.fromRGB(198, 188, 202),
-			slider_text = Color3.fromRGB(112, 112, 112),
-
-			textbox_background = Color3.fromRGB(198, 189, 202),
-			textbox_background_hover = Color3.fromRGB(215, 206, 227),
-			textbox_text = Color3.fromRGB(112, 112, 112),
-			textbox_text_hover = Color3.fromRGB(50, 50, 50),
-			textbox_placeholder = Color3.fromRGB(178, 178, 178),
-
-			dropdown_background = Color3.fromRGB(198, 189, 202),
-			dropdown_text = Color3.fromRGB(112, 112, 112),
-			dropdown_text_hover = Color3.fromRGB(50, 50, 50),
-			dropdown_scrollbar_color = Color3.fromRGB(198, 189, 202),
-
-			button_background = Color3.fromRGB(198, 189, 202),
-			button_background_hover = Color3.fromRGB(215, 206, 227),
-			button_background_down = Color3.fromRGB(178, 169, 182),
-
-			scrollbar_color = Color3.fromRGB(198, 189, 202),
-		}
-
-		finity.dark_theme = { -- dark
-			main_container = Color3.fromRGB(32, 32, 33),
-			separator_color = Color3.fromRGB(63, 63, 65),
-
-			text_color = Color3.fromRGB(206, 206, 206),
-
-			category_button_background = Color3.fromRGB(63, 62, 65),
-			category_button_border = Color3.fromRGB(72, 71, 74),
-
-			checkbox_checked = Color3.fromRGB(132, 255, 130),
-			checkbox_outer = Color3.fromRGB(84, 81, 86),
-			checkbox_inner = Color3.fromRGB(132, 132, 136),
-
-			slider_color = Color3.fromRGB(177, 177, 177),
-			slider_color_sliding = Color3.fromRGB(132, 255, 130),
-			slider_background = Color3.fromRGB(88, 84, 90),
-			slider_text = Color3.fromRGB(177, 177, 177),
-
-			textbox_background = Color3.fromRGB(103, 103, 106),
-			textbox_background_hover = Color3.fromRGB(137, 137, 141),
-			textbox_text = Color3.fromRGB(195, 195, 195),
-			textbox_text_hover = Color3.fromRGB(232, 232, 232),
-			textbox_placeholder = Color3.fromRGB(135, 135, 138),
-
-			dropdown_background = Color3.fromRGB(88, 88, 91),
-			dropdown_text = Color3.fromRGB(195, 195, 195),
-			dropdown_text_hover = Color3.fromRGB(232, 232, 232),
-			dropdown_scrollbar_color = Color3.fromRGB(118, 118, 121),
-
-			button_background = Color3.fromRGB(103, 103, 106),
-			button_background_hover = Color3.fromRGB(137, 137, 141),
-			button_background_down = Color3.fromRGB(70, 70, 81),
-
-			scrollbar_color = Color3.fromRGB(118, 118, 121),
-		}
-
-		setmetatable(finity.gs, {
-			__index = function(_, service)
-				return game:GetService(service)
-			end,
-			__newindex = function(t, i)
-				t[i] = nil
-				return
-			end
-		})
-
+		print("You are using Finity version "..Version)
+		print("")
+		print("If you want Help, Found a Bug with the GUI, Have a suggestion or Just enjoy Finity, Join our Discord Community: "..Discord.." :D")
 
 		local mouse = finity.gs["Players"].LocalPlayer:GetMouse()
 
@@ -142,7 +259,7 @@ if game.Loaded then
 				BackgroundTransparency = 1,
 				Position = UDim2.new(0.5, 0, 0.5, 4),
 				Size = UDim2.new(1, 6, 1, 6),
-				Image = "rbxassetid://1316045217",
+				Image = GetAssetFunc("FinityGUI/assets/WindowBlur.png"),
 				ImageTransparency = transparency and true or 0.5,
 				ImageColor3 = Color3.fromRGB(35, 35, 35),
 				ScaleType = Enum.ScaleType.Slice,
@@ -152,45 +269,31 @@ if game.Loaded then
 			shadow.Parent = object
 		end
 
-        function finity.ToastMessage(Header, Content, Time)
-            local StarterGui = game:GetService("StarterGui")
+		function finity.new(Title: string, IsDark: boolean, CustomTheme: boolean, CustomThemeName: string, HideToolTip: boolean, ToolTipText: string)
 
-			StarterGui:SetCore("SendNotification", {
-				Title = Header,
-				Text = Content,
-				Duration = Time
-			})
-        end
-
-
-		function finity.new(Title, isdark, HideToolTip, ToolTipText)
-
-			local finityObject = {}
-			local self2 = finityObject
-			local self = finity
-
-			if not finity.gs["RunService"]:IsStudio() and self.gs["CoreGui"]:FindFirstChild("FinityUI") then
-				warn("You already made the Window...")
+			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
+				warn("Finity already exists.")
+                finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy() -- lazy way of preventing dupelicates of the gui from appearing
 			end
 
-			local projectName = false
-			local thinMenu = false
-			local theme = finity.theme
-
-			if isdark == true then
-				theme = finity.dark_theme
-			elseif isdark == false or isdark == nil then
-				theme = finity.theme
-			end
-
-			if gprojectName then projectName = gprojectName end
-			if thinProject then thinMenu = thinProject end
+			-- You could use these two but i personally dont find much use with these, up to you!
+			local gprojectName = false
+			local thinProject = false
 
 			local toggled = true
 			local typing = false
 			local firstCategory = true
 			local savedposition = UDim2.new(0.5, 0, 0.5, 0)
 
+			if IsDark and CustomTheme then
+				theme = custom_Themes.CustomThemeName
+			elseif not IsDark and CustomTheme then
+				theme = custom_Themes.CustomThemeName
+			elseif not IsDark and not CustomTheme then
+				theme = finity.themes.Light
+			elseif IsDark and not CustomTheme then
+				theme = finity.themes.Dark
+			end
 
 			local finityData
 			finityData = {
@@ -199,7 +302,7 @@ if game.Loaded then
 			}
 
 			self2.ChangeToggleKey = function(NewKey)
-				finityData.ToggleKey = NewKey
+				finityData.ToggleKey = "Enum.Keycode."..NewKey
 
 				if finityData.UpConnection then
 					finityData.UpConnection:Disconnect()
@@ -210,8 +313,7 @@ if game.Loaded then
 
 						toggled = not toggled
 
-						local su, e = pcall(function() self2.modal.Modal = toggled end)
-						print(e)
+						self2.modal.Modal = toggled
 
 						if toggled then
 
@@ -231,10 +333,13 @@ if game.Loaded then
 
 				if Transparency then
 					self2.container.ImageTransparency = Transparency
-				elseif Transparency == nil or Transparency == 0.8 then -- If the value isnt defined or the same then
+				elseif Transparency == nil or Transparency == "" or Transparency == " " then
+					self2.container.ImageTransparency = 0
+				elseif Transparency == 0.8 then -- If the value isnt defined or the same then
 					self2.container.ImageTransparency = 0.8 -- set to 0.8
 				elseif Transparency > 1 then
 					warn("You're trying to set the transparency over the Max amount, Setting to 1. Please try setting it to values from 0 - 1")
+					self2.container.ImageTransparency = 1
 				end
 			end
 
@@ -251,9 +356,10 @@ if game.Loaded then
 			end)
 
 			self2.userinterface = self:Create("ScreenGui", {
-				Name = "FinityUI",
+				Name = "Finity",
 				ZIndexBehavior = Enum.ZIndexBehavior.Global,
 				ResetOnSpawn = false,
+				Parent = finity.gs["CoreGui"]
 			})
 
 			self2.container = self:Create("ImageLabel", {
@@ -274,7 +380,7 @@ if game.Loaded then
 				Text = "text";
 				Transparency = 1;
 				Modal = true;
-			}) 
+			})
 
 			self2.modal.Parent = self2.userinterface; -- Sets the parent of the button
 
@@ -282,12 +388,9 @@ if game.Loaded then
 				self2.container.Size = thinProject
 			end
 
-			-- Should fix issue with the GUI Not being draggable...
-			if not self2.container.Draggable or self2.container.Draggable == nil then
-				self2.container.Draggable = true
-			end
+			self2.container.Draggable = true
 
-			self2.container.Active = false
+			self2.container.Active = true
 
 			self2.sidebar = self:Create("Frame", {
 				Name = "Sidebar",
@@ -324,7 +427,7 @@ if game.Loaded then
 				ZIndex = 2,
 				Size = UDim2.new(1, -30, 0, 30),
 				Position = UDim2.new(0, 30, 0, 0),
-				Text = "Press '".. string.sub(tostring(self.ToggleKey), 14) .."' to hide this menu", -- defaults
+				--Text = 'Press ',".. string.sub(tostring(self.ToggleKey), 14) ..",' to hide this menu', -- defaults
 				Font = Enum.Font.GothamSemibold,
 				TextSize = 13,
 				TextXAlignment = Enum.TextXAlignment.Left,
@@ -332,22 +435,20 @@ if game.Loaded then
 				TextColor3 = theme.text_color,
 			})
 
-			if Title and not HideToolTip then
-				self2.tip.Text = Title.." || "..ToolTipText.." || "..version
-			elseif Title and HideToolTip then
-				self2.tip.Text = Title.." || "..version
-			elseif not HideToolTip and not ToolTipText and not Title then
-				self2.tip.Text = "Press '".. string.sub(tostring(self.ToggleKey), 14) .."' to hide the Menu || "..version
+			if not Title == nil or not Title == "" or not Title == " " and not HideToolTip then
+				self2.tip.Text = Title.." | "..ToolTipText.." | "..Version
+			elseif not Title == nil or not Title == "" and HideToolTip == true then
+				self2.tip.Text = Title.." | "..Version
 			elseif not HideToolTip and ToolTipText and not Title then
 				self2.tip.Text = ToolTipText
 			elseif not Title and HideToolTip then
-				self2.tip.Text = version
+				self2.tip.Text = Version
 			elseif not HideToolTip and ToolTipText and Title then
-				self2.tip.Text = Title.." || "..ToolTipText.." || "..version
+				self2.tip.Text = Title.." | "..ToolTipText.." | "..Version
 			end
 
-			function finity.settitle(text)
-				self2.tip.Text = tostring(text)
+			function finity.settitle(text: string)
+				self2.tip.Text = text
 			end
 
 			local separator = self:Create("Frame", {
@@ -423,9 +524,9 @@ if game.Loaded then
 					ZIndex = 2,
 					CanvasSize = UDim2.new(0, 0, 0, 0),
 					ScrollBarImageColor3 = theme.scrollbar_color or Color3.fromRGB(118, 118, 121),
-					BottomImage = "rbxassetid://967852042",
-					MidImage = "rbxassetid://967852042",
-					TopImage = "rbxassetid://967852042",
+					BottomImage = GetAssetFunc("FinityGUI/assets/ScrollBar.png"),
+					MidImage = GetAssetFunc("FinityGUI/assets/ScrollBar.png"),
+					TopImage = GetAssetFunc("FinityGUI/assets/ScrollBar.png"),
 					ScrollBarImageTransparency = 1 --
 				})
 
@@ -654,7 +755,7 @@ if game.Loaded then
 									Position = UDim2.new(1, 0, 0.5, 0),
 									Size = UDim2.new(0, 20, 0, 20),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("Finity/asset/CheatBoxStuff.png"),
 									ImageColor3 = theme.checkbox_outer,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -669,7 +770,7 @@ if game.Loaded then
 									Position = UDim2.new(0.5, 0, 0.5, 0),
 									Size = UDim2.new(0, 14, 0, 14),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("Finity/asset/CheatBoxStuff.png"),
 									ImageColor3 = theme.checkbox_inner,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -731,8 +832,8 @@ if game.Loaded then
 									end
 								end
 
-								local hsvimage = "rbxassetid://4613607014"
-								local lumienceimage = "rbxassetid://4613627894"
+								local hsvimage = GetAssetFunc("FinityGUI/asset/HSVBar.png")
+								local lumienceimage = "rbxassetid://4613627894" -- cant get this from roblox preview as it wont actually like load?
 
 								cheat.hsvbar = finity:Create("ImageButton", {
 									AnchorPoint = Vector2.new(0.5, 0.5),
@@ -753,7 +854,7 @@ if game.Loaded then
 									Position = UDim2.new(0.5, 0, 0.5, -6),
 									Size = UDim2.new(0, 6, 0, 6),
 									ZIndex = 3,
-									Image = "rbxassetid://2500573769",
+									Image = GetAssetFunc("FinityGUI/assets/Arrow.png"),
 									Rotation = -90
 								})
 
@@ -868,8 +969,8 @@ if game.Loaded then
 									BackgroundColor3 = Color3.new(1, 1, 1),
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
-									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									ZIndex = 3,
+									Image = GetAssetFunc("FinityGUI/assets/DropDown.png"),
 									ImageColor3 = theme.dropdown_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -883,7 +984,7 @@ if game.Loaded then
 									BackgroundTransparency = 1,
 									Position = UDim2.new(0, 10, 0, 0),
 									Size = UDim2.new(1, -35, 1, 0),
-									ZIndex = 2,
+									ZIndex = 3,
 									Font = Enum.Font.Gotham,
 									Text = tostring(cheat.value),
 									TextColor3 = theme.dropdown_text,
@@ -899,9 +1000,9 @@ if game.Loaded then
 									Position = UDim2.new(0, 0, 1, 0),
 									Size = UDim2.new(1, 0, 0, 100),
 									ZIndex = 3,
-									BottomImage = "rbxassetid://967852042",
-									MidImage = "rbxassetid://967852042",
-									TopImage = "rbxassetid://967852042",
+									BottomImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
+									MidImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
+									TopImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
 									ScrollBarThickness = 4,
 									VerticalScrollBarInset = Enum.ScrollBarInset.None,
 									ScrollBarImageColor3 = theme.dropdown_scrollbar_color
@@ -1061,7 +1162,7 @@ if game.Loaded then
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
 									ImageColor3 = theme.textbox_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1114,7 +1215,7 @@ if game.Loaded then
 								end)
 								function cheat:SetValue(value)
 									cheat.value = tostring(value)
-									cheat.textbox.Text = tostring(val)
+									cheat.textbox.Text = tostring(value)
 								end
 
 								cheat.background.Parent = cheat.container
@@ -1139,7 +1240,7 @@ if game.Loaded then
 									Position = UDim2.new(1, 0, 0.5, 0),
 									Size = UDim2.new(1, 0, 0, 6),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("FinityGUI/assetss/CheatSliderbar.png"),
 									ImageColor3 = theme.slider_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1169,7 +1270,7 @@ if game.Loaded then
 									BackgroundTransparency = 1,
 									Size = UDim2.new(0.5, 0, 1, 0),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("FinityGUI/assetss/CheatVisiFrame.png"),
 									ImageColor3 = theme.slider_color,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -1305,7 +1406,7 @@ if game.Loaded then
 								cheat.visiframe.Parent = cheat.sliderbar
 								cheat.numbervalue.Parent = cheat.sliderbar
 								cheat.sliderbar.Parent = cheat.container
-								
+
 							elseif string.lower(kind) == "button" then
 								local button_text = data and data.text
 
@@ -1315,7 +1416,7 @@ if game.Loaded then
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("FinityGUI/assetss/CheatBackground.png"),
 									ImageColor3 = theme.button_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1382,7 +1483,7 @@ if game.Loaded then
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
-									Image = "rbxassetid://3570695787",
+									Image = GetAssetFunc("FinityGUI/assetss/CheatBackground.png"),
 									ImageColor3 = theme.button_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1550,7 +1651,7 @@ if game.Loaded then
 			self2.categories.ClipsDescendants = true
 
 			if not finity.gs["RunService"]:IsStudio() then
-				
+
 				self2.userinterface.Parent = self.gs["CoreGui"]
 			else
 				self2.userinterface.Parent = self.gs["Players"].LocalPlayer:WaitForChild("PlayerGui")
@@ -1566,10 +1667,204 @@ if game.Loaded then
 		end
 
 	elseif not game.Loaded then repeat until game.Loaded end
-	
+
 end)
 
-if not suc then print(err) end
+--[[
+	The code for the toast is from Vape Same for the bettertween2 function: https://github.com/7GrandDadPGN/VapeV4ForRoblox
+]]
+
+	local bettertween2 = function(obj, newpos, dir, style, time, override)
+		task.spawn(function()
+			local frame = Instance.new("Frame")
+			frame.Visible = false
+			frame.Position = obj.Position
+			frame.Parent = self2.userinterface
+			frame.Name = "BetterTween2"
+			frame:GetPropertyChangedSignal("Position"):Connect(function()
+				obj.Position = UDim2.new(frame.Position.X.Scale, frame.Position.X.Offset, obj.Position.Y.Scale, obj.Position.Y.Offset)
+			end)
+			pcall(function()
+				frame:TweenPosition(newpos, dir, style, time, override)
+			end)
+			frame.Parent = nil
+			task.wait(time)
+			frame:Remove()
+		end)
+	end
+
+	function finity.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
+
+		local AlertTypes = {
+			Warning = GetAssetFunc('FinityGUI/assets/WarningNotification.png'),
+			Info = GetAssetFunc('FinityGUI/assets/InfoNotification.png'),
+			Success = GetAssetFunc('FinityGUI/assets/Success.png'),
+		}
+
+		if not finity.gs["CoreGui"]:FindFirstChild("Finity") then
+			error("Please make a Finity Gui first before making notifications...", 20)
+		end
+
+        	local notificationwindow = Instance.new("Frame")
+		notificationwindow.BackgroundTransparency = 1
+		notificationwindow.Active = false
+		notificationwindow.Parent = self2.userinterface
+		notificationwindow.Size = UDim2.new(1, 0, 1, 0)
+        	notificationwindow.Name = "NotifWindow"
+
+		if not finity.gs["CoreGui"]:FindFirstChild("Finity")["NotifWindow"] then
+			print("Made NotificationWindow")
+        elseif finity.gs["CoreGui"]:FindFirstChild("Finity")["NotifWindow"] then
+		end
+
+		notificationwindow.ChildRemoved:Connect(function()
+			for i,v in pairs(notificationwindow:GetChildren()) do
+				bettertween(v, UDim2.new(1, v.Position.X.Offset, 1, -(150 + 80 * (i - 1))), Enum.EasingDirection.In, Enum.EasingStyle.Sine, Duration, true)
+			end
+		end)
+
+		local offset = #notificationwindow:GetChildren()
+
+		local container = Instance.new("Frame")
+		container.Size = UDim2.new(0, 266, 0, 75)
+		container.Position = UDim2.new(1, 0, 1, -(150 + 80 * offset))
+		container.BackgroundTransparency = 0
+		container.BackgroundColor3 = theme.main_container
+		container.BorderSizePixel = 0
+		container.Parent = notificationwindow
+		container.Visible = true
+		container.ClipsDescendants = false
+		container.Name = "container"
+
+		local backgroundImg = Instance.new("ImageLabel")
+		backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
+		backgroundImg.Position = UDim2.new(0, -61, 0, -50)
+		backgroundImg.BackgroundTransparency = 1
+		backgroundImg.Name = "backgroundImg"
+		backgroundImg.ScaleType = Enum.ScaleType.Slice
+		backgroundImg.Size = UDim2.new(1, 61, 0, 159)
+		backgroundImg.Parent = container
+
+		if not CustomBackgroundIcon == nil or not CustomBackgroundIcon == "" or not CustomBackgroundIcon == " " then
+
+			local backgroundImg = Instance.new("ImageLabel")
+			backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
+			backgroundImg.Position = UDim2.new(0, -61, 0, -50)
+			backgroundImg.BackgroundTransparency = 1
+			backgroundImg.Name = "backgroundImg"
+			backgroundImg.ScaleType = Enum.ScaleType.Slice
+			backgroundImg.Image = GetAssetFunc(CustomBackgroundIcon)
+			backgroundImg.Size = UDim2.new(1, 61, 0, 159)
+			backgroundImg.Parent = container
+		end
+
+		local uicorner = Instance.new("UICorner")
+		uicorner.CornerRadius = UDim.new(0, 6)
+		uicorner.Parent = container
+
+		local frame2 = Instance.new("ImageLabel")
+		frame2.BackgroundColor3 = theme.main_container
+		frame2.Name = "Frame"
+
+		frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+			frame2.ImageColor3 = frame2.BackgroundColor3
+		end)
+
+		frame2.BackgroundTransparency = 0
+		frame2.SliceCenter = Rect.new(2, 0, 224, 2)
+		frame2.Size = UDim2.new(1, -61, 0, 2)
+		frame2.ScaleType = Enum.ScaleType.Slice
+		frame2.Position = UDim2.new(0, 63, 1, -36)
+		frame2.ZIndex = 2
+		frame2.Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png")
+		frame2.BorderSizePixel = 0
+		frame2.Parent = container
+
+		if Alert_Type == "Warning" then
+
+			local icon = Instance.new("ImageLabel")
+			icon.Name = "IconLabel"
+			icon.Image = AlertTypes.Warning
+			icon.BackgroundTransparency = 0
+			icon.Position = UDim2.new(0, 22, 0, 18)
+			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Parent = container
+
+		elseif Alert_Type == "Info" then
+
+			local icon = Instance.new("ImageLabel")
+			icon.Name = "IconLabel"
+			icon.Image = AlertTypes.Info
+			icon.BackgroundTransparency = 0
+			icon.Position = UDim2.new(0, 22, 0, 18)
+			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Parent = container
+
+		elseif Alert_Type == "Success" then
+
+			local icon = Instance.new("ImageLabel")
+			icon.Name = "IconLabel"
+			icon.Image = AlertTypes.Success
+			icon.BackgroundTransparency = 0
+			icon.Position = UDim2.new(0, 22, 0, 18)
+			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Parent = container
+
+		end
+
+		local icon = Instance.new("ImageLabel")
+		icon.Name = "IconLabel"
+		icon.Image = AlertTypes.Success
+		icon.BackgroundTransparency = 1
+		icon.Position = UDim2.new(0, 22, 0, 18)
+		icon.Size = UDim2.new(0, 40, 0, 40)
+		icon.Parent = container
+
+		local Title = Instance.new("TextLabel")
+		Title.Font = Enum.Font.Gotham
+		Title.TextSize = 13
+		Title.RichText = true
+		Title.TextTransparency = 0
+		Title.TextColor3 = theme.notification_info
+		Title.BackgroundTransparency = 1
+		Title.Position = UDim2.new(0, 46, 0, 18)
+		Title.TextXAlignment = Enum.TextXAlignment.Left
+		Title.TextYAlignment = Enum.TextYAlignment.Top
+		Title.Text = "<b>"..TopText.."</b>"
+		Title.Parent = container
+
+		local Content = Title:Clone()
+		Content.Position = UDim2.new(0, 46, 0, 44)
+		Content.Font = Enum.Font.Gotham
+		Content.TextTransparency = 0
+		Content.TextColor3 = theme.notification_info
+		Content.RichText = true
+		Content.Text = "<b>"..BottomText.."</b>"
+		Content.Parent = container
+
+		local textlabel3 = Content:Clone()
+		textlabel3.Position = UDim2.new(0, 1, 0, 1)
+		textlabel3.TextTransparency = 0.5
+		textlabel3.TextColor3 = Color3.new(0, 0, 0)
+		textlabel3.Text = "test"
+		textlabel3.ZIndex = -1
+		textlabel3.Parent = Content
+
+		task.spawn(function()
+			pcall(function()
+				bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+				task.wait(0.15)
+				frame2:TweenSize(UDim2.new(0, 0, 0, 2), Enum.EasingDirection.In, Enum.EasingStyle.Linear, Duration, true)
+				task.wait(Duration)
+				bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+				task.wait(0.15)
+				container:Destroy()
+			end)
+		end)
+		return container
+	end
+
+if not suc then warn(err) end
 
 return finity
 
