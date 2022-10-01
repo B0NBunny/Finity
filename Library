@@ -1803,8 +1803,8 @@ end)
 			icon.Image = GetAssetFunc('FinityGUI/assets/Success.png')
 			icon.BackgroundTransparency = 1
 			icon.BorderSizePixel = 0
-			icon.Position = UDim2.new(0, -17, 0, -6)
-			icon.Size = UDim2.new(0, 90, 0, 90)
+			icon.Position = UDim2.new(0, 7, 0, 14) -- the image is much bigger than others idk why
+			icon.Size = UDim2.new(0, 40, 0, 40)
 			icon.Parent = container
 
 		end
@@ -1830,6 +1830,20 @@ end)
 		Content.RichText = true
 		Content.Text = "<b>"..BottomText.."</b>"
 		Content.Parent = container
+
+		notificationwindow.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				task.spawn(function()
+					pcall(function()
+						bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						task.wait(0.15)
+						bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						task.wait(0.15)
+						container:Destroy()
+					end)
+				end)
+			end
+		end)
 
 		task.spawn(function()
 			pcall(function()
