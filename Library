@@ -5,10 +5,31 @@ local finityObject = {}
 local self2 = finityObject
 local self = finity
 
+local getasset = getsynasset or getcustomasset
+
 local Version = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/version"))()
 local Discord = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/discord"))()
 
 local custom_Themes
+
+local Asset_Names = {
+	"Arrow.png",
+	"CheatBackground.png",
+	"CheatBoxStuff.png",
+	"CheatList.png",
+	"CheatSliderbar.png",
+	"CheatVisiFrame.png",
+	"Disable.wav",
+	"DropDown.png",
+	"Enable.wav",
+	"HSVBar.png",
+	"InfoNotification.png",
+	"NotificationBar.png",
+	"ScrollBar.png",
+	"Success.png",
+	"WarningNotification.png",
+	"WindowBlur.png"
+}
 
 if writefile then
 elseif not writefile then
@@ -41,25 +62,6 @@ return Custom_Finity_Theme]])
 
 	-- Downloads the files from the github to the assets folder
 
-	local Asset_Names = {
-		"Arrow.png",
-		"CheatBackground.png",
-		"CheatBoxStuff.png",
-		"CheatList.png",
-		"CheatSliderbar.png",
-		"CheatVisiFrame.png",
-		"Disable.wav",
-		"DropDown.png",
-		"Enable.wav",
-		"HSVBar.png",
-		"InfoNotification.png",
-		"NotificationBar.png",
-		"ScrollBar.png",
-		"Success.png",
-		"WarningNotification.png",
-		"WindowBlur.png"
-	}
-
 	for i, v in Asset_Names do
 		writefile('FinityGUI/assets/'..v, game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v))
 	end
@@ -88,29 +90,24 @@ function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThe
 end
 
 local GetAssetFunc = function(path: string)
-	if identifyexecutor() == "KrnlIs" then
-		getcustomasset(path)
-	elseif identifyexecutor() == "Synapse" then
-		getsynasset(path)
-	elseif not identifyexecutor() == "Synapse" or not identifyexecutor() == "KrnlIs" then
-		print(identifyexecutor().."Is not supported.")
-	end
+		--[[if not isfile(path) then -- Not working, needs fixing. On todo
+			print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
+			DFAA()
+		end]]
 
-	--[[if not isfile(path) then -- Not working, needs fixing. On todo
-		print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
-		DFAA()
-	end]]
-	return path
+	return getasset(path)
 end
 
-function finity.ImportCustomThemes(Theme_Name)
-	local CustomthemeScript = GetAssetFunc("FinityGUI/Customtheme.lua")
-	local t = loadfile(CustomthemeScript)
+print(GetAssetFunc)
 
-	local themes = t.CustomThemes[Theme_Name]
+function finity.ImportCustomThemes(Theme_Name)
+	local CustomthemeScript = loadfile("FinityGUI/Customtheme.lua")()
+
+	local themes = CustomthemeScript.CustomThemes[Theme_Name]
 
 	for i, v in themes do
 		custom_Themes = themes
+		print(i, v)
 	end
 end
 
@@ -226,12 +223,11 @@ local suc, err = pcall(function()
 	if game.Loaded then
 
 		print([[
-		_____ ___ _   _ ___ _______   __
-		|  ___|_ _|  | |_ _|_   _  / /
-		| |_   | ||  | || |  | |   V /
-		|  _|  | || |  || |  | |   | |
-		|_|   |___|_| _|___| |_|   |_|
-
+			_____ ___ _   _ ___ _______   __
+			|  ___|_ _| \ | |_ _|_   _\ \ / /
+			| |_   | ||  \| || |  | |  \ V /
+			|  _|  | || |\  || |  | |   | |
+			|_|   |___|_| \_|___| |_|   |_|
 		]])
 
 		print("You are using Finity version "..Version)
@@ -269,7 +265,7 @@ local suc, err = pcall(function()
 			shadow.Parent = object
 		end
 
-		function finity.new(Title: string, IsDark: boolean, CustomTheme: boolean, CustomThemeName: string, HideToolTip: boolean, ToolTipText: string)
+		function finity.new(Title, IsDark, CustomTheme, CustomThemeName, HideToolTip, ToolTipText)
 
 			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
 				warn("Finity already exists.")
@@ -422,8 +418,8 @@ local suc, err = pcall(function()
 				BackgroundTransparency = 2
 			})
 
-			self2.tip = self:Create("TextLabel", {
-				Name = "TopbarTip",
+			self2.title = self:Create("TextLabel", {
+				Name = "Title",
 				ZIndex = 2,
 				Size = UDim2.new(1, -30, 0, 30),
 				Position = UDim2.new(0, 30, 0, 0),
@@ -434,22 +430,6 @@ local suc, err = pcall(function()
 				BackgroundTransparency = 1,
 				TextColor3 = theme.text_color,
 			})
-
-			if not Title == nil or not Title == "" or not Title == " " and not HideToolTip then
-				self2.tip.Text = Title.." | "..ToolTipText.." | "..Version
-			elseif not Title == nil or not Title == "" and HideToolTip == true then
-				self2.tip.Text = Title.." | "..Version
-			elseif not HideToolTip and ToolTipText and not Title then
-				self2.tip.Text = ToolTipText
-			elseif not Title and HideToolTip then
-				self2.tip.Text = Version
-			elseif not HideToolTip and ToolTipText and Title then
-				self2.tip.Text = Title.." | "..ToolTipText.." | "..Version
-			end
-
-			function finity.settitle(text: string)
-				self2.tip.Text = text
-			end
 
 			local separator = self:Create("Frame", {
 				Name = "Separator",
@@ -1661,7 +1641,27 @@ local suc, err = pcall(function()
 			self2.categories.Parent = self2.container
 			self2.sidebar.Parent = self2.container
 			self2.topbar.Parent = self2.container
-			self2.tip.Parent = self2.topbar
+			self2.title.Parent = self2.topbar
+
+			if Title and not HideToolTip then -- if theres a title and we dont hide the tool tip
+				self2.title.Text = Title --.." | "..ToolTipText.." | "..Version
+
+			elseif Title and HideToolTip then --
+				self2.title.Text = Title.." | "..Version
+
+			elseif not HideToolTip and ToolTipText and Title then
+				self2.title.Text = ToolTipText
+
+			elseif Title and HideToolTip then
+				self2.title.Text = Version
+
+			elseif not HideToolTip and ToolTipText and Title then -- if theres a title and we dont hide the tool tip and there is text for the tool tip
+				self2.title.Text = Title.." | "..ToolTipText.." | "..Version
+			end
+
+			function finity.settitle(text: string)
+				self2.title.Text = text
+			end
 
 			return self2, finityData
 		end
@@ -1695,22 +1695,16 @@ end)
 
 	function finity.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
 
-		local AlertTypes = {
-			Warning = GetAssetFunc('FinityGUI/assets/WarningNotification.png'),
-			Info = GetAssetFunc('FinityGUI/assets/InfoNotification.png'),
-			Success = GetAssetFunc('FinityGUI/assets/Success.png'),
-		}
-
 		if not finity.gs["CoreGui"]:FindFirstChild("Finity") then
 			error("Please make a Finity Gui first before making notifications...", 20)
 		end
 
-        	local notificationwindow = Instance.new("Frame")
+        local notificationwindow = Instance.new("Frame")
 		notificationwindow.BackgroundTransparency = 1
 		notificationwindow.Active = false
 		notificationwindow.Parent = self2.userinterface
 		notificationwindow.Size = UDim2.new(1, 0, 1, 0)
-        	notificationwindow.Name = "NotifWindow"
+        notificationwindow.Name = "NotifWindow"
 
 		if not finity.gs["CoreGui"]:FindFirstChild("Finity")["NotifWindow"] then
 			print("Made NotificationWindow")
@@ -1764,61 +1758,56 @@ end)
 
 		local frame2 = Instance.new("ImageLabel")
 		frame2.BackgroundColor3 = theme.main_container
-		frame2.Name = "Frame"
-
-		frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
-			frame2.ImageColor3 = frame2.BackgroundColor3
-		end)
-
+		frame2.Name = "Timer"
 		frame2.BackgroundTransparency = 0
 		frame2.SliceCenter = Rect.new(2, 0, 224, 2)
-		frame2.Size = UDim2.new(1, -61, 0, 2)
+		frame2.Size = UDim2.new(1, 0, 0, 2)
 		frame2.ScaleType = Enum.ScaleType.Slice
-		frame2.Position = UDim2.new(0, 63, 1, -36)
+		frame2.Position = UDim2.new(0, 3, 1, -3)
 		frame2.ZIndex = 2
+		frame2.Active = true
 		frame2.Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png")
 		frame2.BorderSizePixel = 0
 		frame2.Parent = container
 
+		--[[frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+			frame2.ImageColor3 = frame2.BackgroundColor3
+		end)]]
+
 		if Alert_Type == "Warning" then
 
 			local icon = Instance.new("ImageLabel")
-			icon.Name = "IconLabel"
-			icon.Image = AlertTypes.Warning
-			icon.BackgroundTransparency = 0
-			icon.Position = UDim2.new(0, 22, 0, 18)
-			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Name = "AlertIcon"
+			icon.Image = GetAssetFunc('FinityGUI/assets/WarningNotification.png')
+			icon.BackgroundTransparency = 1
+			icon.BorderSizePixel = 0
+			icon.Position = UDim2.new(0, -17, 0, -6)
+			icon.Size = UDim2.new(0, 90, 0, 90)
 			icon.Parent = container
 
 		elseif Alert_Type == "Info" then
 
 			local icon = Instance.new("ImageLabel")
-			icon.Name = "IconLabel"
-			icon.Image = AlertTypes.Info
-			icon.BackgroundTransparency = 0
-			icon.Position = UDim2.new(0, 22, 0, 18)
-			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Name = "AlertIcon"
+			icon.Image = GetAssetFunc('FinityGUI/assets/InfoNotification.png')
+			icon.BackgroundTransparency = 1
+			icon.BorderSizePixel = 0
+			icon.Position = UDim2.new(0, -17, 0, -6)
+			icon.Size = UDim2.new(0, 90, 0, 90)
 			icon.Parent = container
 
 		elseif Alert_Type == "Success" then
 
 			local icon = Instance.new("ImageLabel")
-			icon.Name = "IconLabel"
-			icon.Image = AlertTypes.Success
-			icon.BackgroundTransparency = 0
-			icon.Position = UDim2.new(0, 22, 0, 18)
-			icon.Size = UDim2.new(0, 40, 0, 40)
+			icon.Name = "AlertIcon"
+			icon.Image = GetAssetFunc('FinityGUI/assets/Success.png')
+			icon.BackgroundTransparency = 1
+			icon.BorderSizePixel = 0
+			icon.Position = UDim2.new(0, -17, 0, -6)
+			icon.Size = UDim2.new(0, 90, 0, 90)
 			icon.Parent = container
 
 		end
-
-		local icon = Instance.new("ImageLabel")
-		icon.Name = "IconLabel"
-		icon.Image = AlertTypes.Success
-		icon.BackgroundTransparency = 1
-		icon.Position = UDim2.new(0, 22, 0, 18)
-		icon.Size = UDim2.new(0, 40, 0, 40)
-		icon.Parent = container
 
 		local Title = Instance.new("TextLabel")
 		Title.Font = Enum.Font.Gotham
@@ -1827,28 +1816,20 @@ end)
 		Title.TextTransparency = 0
 		Title.TextColor3 = theme.notification_info
 		Title.BackgroundTransparency = 1
-		Title.Position = UDim2.new(0, 46, 0, 18)
+		Title.Position = UDim2.new(0, 56, 0, 18)
 		Title.TextXAlignment = Enum.TextXAlignment.Left
 		Title.TextYAlignment = Enum.TextYAlignment.Top
 		Title.Text = "<b>"..TopText.."</b>"
 		Title.Parent = container
 
 		local Content = Title:Clone()
-		Content.Position = UDim2.new(0, 46, 0, 44)
+		Content.Position = UDim2.new(0, 56, 0, 44)
 		Content.Font = Enum.Font.Gotham
 		Content.TextTransparency = 0
 		Content.TextColor3 = theme.notification_info
 		Content.RichText = true
 		Content.Text = "<b>"..BottomText.."</b>"
 		Content.Parent = container
-
-		local textlabel3 = Content:Clone()
-		textlabel3.Position = UDim2.new(0, 1, 0, 1)
-		textlabel3.TextTransparency = 0.5
-		textlabel3.TextColor3 = Color3.new(0, 0, 0)
-		textlabel3.Text = "test"
-		textlabel3.ZIndex = -1
-		textlabel3.Parent = Content
 
 		task.spawn(function()
 			pcall(function()
@@ -1862,7 +1843,9 @@ end)
 			end)
 		end)
 		return container
+
 	end
+
 
 if not suc then warn(err) end
 
