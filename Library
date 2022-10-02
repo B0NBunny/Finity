@@ -589,7 +589,8 @@ local suc, err = pcall(function()
 							if categoryf ~= category.container then
 								finity.gs["TweenService"]:Create(categoryf.Hider, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
 								finity.gs["TweenService"]:Create(categoryf, TweenInfo.new(0.3), {ScrollBarImageTransparency = 1}):Play()
-
+								local sound = Instance.new("Sound")
+								sound.Loaded = GetAssetFunc("FinityGUI/assets/Enable.wav")
 							end
 						end
 					end
@@ -736,7 +737,7 @@ local suc, err = pcall(function()
 									Position = UDim2.new(1, 0, 0.5, 0),
 									Size = UDim2.new(0, 20, 0, 20),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/asset/CheatBackground.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
 									ImageColor3 = theme.checkbox_outer,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -751,7 +752,7 @@ local suc, err = pcall(function()
 									Position = UDim2.new(0.5, 0, 0.5, 0),
 									Size = UDim2.new(0, 14, 0, 14),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/asset/CheatBoxStuff.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatBoxStuff.png"),
 									ImageColor3 = theme.checkbox_inner,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -813,7 +814,7 @@ local suc, err = pcall(function()
 									end
 								end
 
-								local hsvimage = GetAssetFunc("FinityGUI/asset/HSVBar.png")
+								local hsvimage = GetAssetFunc("FinityGUI/assets/HSVBar.png")
 								local lumienceimage = "rbxassetid://4613627894" -- cant get this from roblox preview as it wont actually like load?
 
 								cheat.hsvbar = finity:Create("ImageButton", {
@@ -1221,7 +1222,7 @@ local suc, err = pcall(function()
 									Position = UDim2.new(1, 0, 0.5, 0),
 									Size = UDim2.new(1, 0, 0, 6),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assetss/CheatSliderbar.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatSliderbar.png"),
 									ImageColor3 = theme.slider_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1251,7 +1252,7 @@ local suc, err = pcall(function()
 									BackgroundTransparency = 1,
 									Size = UDim2.new(0.5, 0, 1, 0),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assetss/CheatVisiFrame.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatVisiFrame.png"),
 									ImageColor3 = theme.slider_color,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
@@ -1397,7 +1398,7 @@ local suc, err = pcall(function()
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assetss/CheatBackground.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
 									ImageColor3 = theme.button_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
@@ -1464,7 +1465,7 @@ local suc, err = pcall(function()
 									BackgroundTransparency = 1,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assetss/CheatBackground.png"),
+									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
 									ImageColor3 = theme.button_background,
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
