@@ -9,7 +9,7 @@ local Finity = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalS
 
 local FinityWindow = Finity.new("Finity Menu", true, false, "Example") -- Creates the window
 
---FinityWindow.ChangeToggleKey(Enum.KeyCode.Semicolon) broken function
+FinityWindow.ChangeToggleKey("Semicolon")
 
 local PlayerSettingsCategory = FinityWindow:Category("Player Settings") -- Makes a button on your left
 local Islandss = FinityWindow:Category("User Stats")
