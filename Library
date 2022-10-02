@@ -19,9 +19,9 @@ local Asset_Names = {
 	"CheatList.png",
 	"CheatSliderbar.png",
 	"CheatVisiFrame.png",
-	"Disable.wav",
+	"NotifSound_2.wav",
 	"DropDown.png",
-	"Enable.wav",
+	"NotifSound_1.wav",
 	"HSVBar.png",
 	"InfoNotification.png",
 	"NotificationBar.png",
@@ -198,8 +198,8 @@ finity.themes = {
 		notification_success = Color3.fromRGB(255,51,51),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		enable_sfx = "FinityGUI/assets/Enable.wav",
-		disable_sfx = "FinityGUI/assets/Disable.wav"
+		NotifSound_1 = "FinityGUI/assets/NotifSound_1.wav",
+		NotifSound_2 = "FinityGUI/assets/NotifSound_2.wav"
 
 	}
 }
@@ -589,8 +589,6 @@ local suc, err = pcall(function()
 							if categoryf ~= category.container then
 								finity.gs["TweenService"]:Create(categoryf.Hider, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
 								finity.gs["TweenService"]:Create(categoryf, TweenInfo.new(0.3), {ScrollBarImageTransparency = 1}):Play()
-								local sound = Instance.new("Sound")
-								sound.Loaded = GetAssetFunc("FinityGUI/assets/Enable.wav")
 							end
 						end
 					end
@@ -1833,7 +1831,7 @@ end)
 		Content.Text = "<b>"..BottomText.."</b>"
 		Content.Parent = container
 
-		notificationwindow.InputBegan:Connect(function(input)
+		container.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
 				task.spawn(function()
 					pcall(function()
