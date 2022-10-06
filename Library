@@ -150,11 +150,11 @@ finity.themes = {
 		scrollbar_color = Color3.fromRGB(118, 118, 121),
 
 		notification_warn = Color3.fromRGB(236, 129, 44),
-		notification_success = Color3.fromRGB(255,51,51),
+		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		NotifSound_1 = "FinityGUI/assets/NotifSound_1.wav",
-		NotifSound_2 = "FinityGUI/assets/NotifSound_2.wav"
+		enable_sfx = GetAssetFunc("FinityGUI/assets/Enable.wav"),
+		disable_sfx = GetAssetFunc("FinityGUI/assets/Disable.wav")
 
 	},
 
@@ -195,7 +195,7 @@ finity.themes = {
 		scrollbar_color = Color3.fromRGB(198, 189, 202),
 
 		notification_warn = Color3.fromRGB(236, 129, 44),
-		notification_success = Color3.fromRGB(255,51,51),
+		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
 		NotifSound_1 = "FinityGUI/assets/NotifSound_1.wav",
@@ -1785,6 +1785,16 @@ end)
 			icon.Size = UDim2.new(0, 90, 0, 90)
 			icon.Parent = container
 
+			local Warningsound = Instance.new("Sound")
+			Warningsound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_2.wav")
+			Warningsound.Parent = container
+			Warningsound:Play()
+
+
+			if Warningsound.Ended then
+				Warningsound:Destroy()
+			end
+
 		elseif Alert_Type == "Info" then
 
 			local icon = Instance.new("ImageLabel")
@@ -1795,6 +1805,15 @@ end)
 			icon.Position = UDim2.new(0, -17, 0, -6)
 			icon.Size = UDim2.new(0, 90, 0, 90)
 			icon.Parent = container
+
+			local Infosound = Instance.new("Sound")
+			Infosound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
+			Infosound.Parent = container
+			Infosound:Play()
+
+			if Infosound.Ended then
+				Infosound:Destroy()
+			end
 
 		elseif Alert_Type == "Success" then
 
@@ -1807,29 +1826,90 @@ end)
 			icon.Size = UDim2.new(0, 40, 0, 40)
 			icon.Parent = container
 
+			local Success_sound = Instance.new("Sound")
+			Success_sound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
+			Success_sound.Parent = container
+			Success_sound:Play()
+
+			if Success_sound.Ended then
+				Success_sound:Destroy()
+			end
+
 		end
 
-		local Title = Instance.new("TextLabel")
-		Title.Font = Enum.Font.Gotham
-		Title.TextSize = 13
-		Title.RichText = true
-		Title.TextTransparency = 0
-		Title.TextColor3 = theme.notification_info
-		Title.BackgroundTransparency = 1
-		Title.Position = UDim2.new(0, 56, 0, 18)
-		Title.TextXAlignment = Enum.TextXAlignment.Left
-		Title.TextYAlignment = Enum.TextYAlignment.Top
-		Title.Text = "<b>"..TopText.."</b>"
-		Title.Parent = container
+		if Alert_Type == "Info" then
 
-		local Content = Title:Clone()
-		Content.Position = UDim2.new(0, 56, 0, 44)
-		Content.Font = Enum.Font.Gotham
-		Content.TextTransparency = 0
-		Content.TextColor3 = theme.notification_info
-		Content.RichText = true
-		Content.Text = "<b>"..BottomText.."</b>"
-		Content.Parent = container
+			local Title = Instance.new("TextLabel")
+			Title.Font = Enum.Font.Gotham
+			Title.TextSize = 13
+			Title.RichText = true
+			Title.TextTransparency = 0
+			Title.TextColor3 = theme.notification_info
+			Title.BackgroundTransparency = 1
+			Title.Position = UDim2.new(0, 56, 0, 18)
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+			Title.TextYAlignment = Enum.TextYAlignment.Top
+			Title.Text = "<b>"..TopText.."</b>"
+			Title.Parent = container
+
+			local Content = Title:Clone()
+			Content.Position = UDim2.new(0, 56, 0, 44)
+			Content.Font = Enum.Font.Gotham
+			Content.TextTransparency = 0
+			Content.RichText = true
+			Title.TextColor3 = theme.notification_info
+			Content.Text = "<b>"..BottomText.."</b>"
+			Content.Parent = container
+
+		elseif Alert_Type == "Warning" then
+
+			local Title = Instance.new("TextLabel")
+			Title.Font = Enum.Font.Gotham
+			Title.TextSize = 13
+			Title.RichText = true
+			Title.TextTransparency = 0
+			Title.TextColor3 = theme.notification_warn
+			Title.BackgroundTransparency = 1
+			Title.Position = UDim2.new(0, 56, 0, 18)
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+			Title.TextYAlignment = Enum.TextYAlignment.Top
+			Title.Text = "<b>"..TopText.."</b>"
+			Title.Parent = container
+
+			local Content = Title:Clone()
+			Content.Position = UDim2.new(0, 56, 0, 44)
+			Content.Font = Enum.Font.Gotham
+			Content.TextTransparency = 0
+			Content.RichText = true
+			Title.TextColor3 = theme.notification_info
+			Content.Text = "<b>"..BottomText.."</b>"
+			Content.Parent = container
+
+		elseif Alert_Type == "Success" then
+
+			local Title = Instance.new("TextLabel")
+			Title.Font = Enum.Font.Gotham
+			Title.TextSize = 13
+			Title.RichText = true
+			Title.TextTransparency = 0
+			Title.TextColor3 = theme.notification_success
+			Title.BackgroundTransparency = 1
+			Title.Position = UDim2.new(0, 56, 0, 18)
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+			Title.TextYAlignment = Enum.TextYAlignment.Top
+			Title.Text = "<b>"..TopText.."</b>"
+			Title.Parent = container
+
+			local Content = Title:Clone()
+			Content.Position = UDim2.new(0, 56, 0, 44)
+			Content.Font = Enum.Font.Gotham
+			Content.TextTransparency = 0
+			Content.RichText = true
+			Title.TextColor3 = theme.notification_info
+			Content.Text = "<b>"..BottomText.."</b>"
+			Content.Parent = container
+
+		end
 
 		container.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1857,9 +1937,7 @@ end)
 			end)
 		end)
 		return container
-
 	end
-
 
 if not suc then warn(err) end
 
