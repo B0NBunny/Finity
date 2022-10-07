@@ -1857,7 +1857,7 @@ end)
 			Content.Font = Enum.Font.Gotham
 			Content.TextTransparency = 0
 			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
+			Content.TextColor3 = theme.notification_info
 			Content.Text = "<b>"..BottomText.."</b>"
 			Content.Parent = container
 
@@ -1881,7 +1881,7 @@ end)
 			Content.Font = Enum.Font.Gotham
 			Content.TextTransparency = 0
 			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
+			Content.TextColor3 = theme.notification_info
 			Content.Text = "<b>"..BottomText.."</b>"
 			Content.Parent = container
 
@@ -1905,7 +1905,7 @@ end)
 			Content.Font = Enum.Font.Gotham
 			Content.TextTransparency = 0
 			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
+			Content.TextColor3 = theme.notification_info
 			Content.Text = "<b>"..BottomText.."</b>"
 			Content.Parent = container
 
