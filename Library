@@ -153,8 +153,8 @@ finity.themes = {
 		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		enable_sfx = GetAssetFunc("FinityGUI/assets/Enable.wav"),
-		disable_sfx = GetAssetFunc("FinityGUI/assets/Disable.wav")
+		NotifSound_1 = GetAssetFunc("FinityGUI/assets/Enable.wav"),
+		NotifSound_2 = GetAssetFunc("FinityGUI/assets/Disable.wav")
 
 	},
 
