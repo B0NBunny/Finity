@@ -7,7 +7,7 @@ local self = finity
 
 local getasset = getsynasset or getcustomasset
 
-local Version = 1.0.2
+local Version = "1.0.2"
 local Discord = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/discord"))()
 
 local custom_Themes
