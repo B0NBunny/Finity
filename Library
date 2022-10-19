@@ -510,6 +510,243 @@ local suc, err = pcall(function()
 			uilistlayout.Parent = self2.sidebar
 			uilistlayout = nil
 
+			function self2.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
+
+				local notificationwindow = Instance.new("Frame")
+				notificationwindow.BackgroundTransparency = 1
+				notificationwindow.Active = false
+				notificationwindow.Parent = self2.userinterface
+				notificationwindow.Size = UDim2.new(1, 0, 1, 0)
+				notificationwindow.Name = "Notification Window Container"
+
+				notificationwindow.ChildRemoved:Connect(function()
+					for i,v in pairs(notificationwindow:GetChildren()) do
+						finity.bettertween(v, UDim2.new(1, v.Position.X.Offset, 1, -(150 + 80 * (i - 1))), Enum.EasingDirection.In, Enum.EasingStyle.Sine, Duration, true)
+					end
+				end)
+
+				local offset = #notificationwindow:GetChildren()
+
+				local container = Instance.new("Frame")
+				container.Size = UDim2.new(0, 266, 0, 75)
+				container.Position = UDim2.new(1, 0, 1, -(150 + 80 * offset))
+				container.BackgroundTransparency = 0
+				container.BackgroundColor3 = theme.main_container
+				container.BorderSizePixel = 0
+				container.Parent = notificationwindow
+				container.Visible = true
+				container.ClipsDescendants = false
+				container.Name = "container"
+
+				local backgroundImg = Instance.new("ImageLabel")
+				backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
+				backgroundImg.Position = UDim2.new(0, -61, 0, -50)
+				backgroundImg.BackgroundTransparency = 1
+				backgroundImg.Name = "backgroundImg"
+				backgroundImg.ScaleType = Enum.ScaleType.Slice
+				backgroundImg.Size = UDim2.new(1, 61, 0, 159)
+				backgroundImg.Parent = container
+
+				if not CustomBackgroundIcon == nil or not CustomBackgroundIcon == "" or not CustomBackgroundIcon == " " then
+
+					local backgroundImg = Instance.new("ImageLabel")
+					backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
+					backgroundImg.Position = UDim2.new(0, -61, 0, -50)
+					backgroundImg.BackgroundTransparency = 1
+					backgroundImg.Name = "backgroundImg"
+					backgroundImg.ScaleType = Enum.ScaleType.Slice
+					backgroundImg.Image = GetAssetFunc(CustomBackgroundIcon)
+					backgroundImg.Size = UDim2.new(1, 61, 0, 159)
+					backgroundImg.Parent = container
+				end
+
+				local uicorner = Instance.new("UICorner")
+				uicorner.CornerRadius = UDim.new(0, 6)
+				uicorner.Parent = container
+
+				local frame2 = Instance.new("ImageLabel")
+				frame2.BackgroundColor3 = theme.main_container
+				frame2.Name = "Timer"
+				frame2.BackgroundTransparency = 0
+				frame2.SliceCenter = Rect.new(2, 0, 224, 2)
+				frame2.Size = UDim2.new(1, 0, 0, 2)
+				frame2.ScaleType = Enum.ScaleType.Slice
+				frame2.Position = UDim2.new(0, 3, 1, -3)
+				frame2.ZIndex = 2
+				frame2.Active = true
+				frame2.Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png")
+				frame2.BorderSizePixel = 0
+				frame2.Parent = container
+
+				--[[frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
+					frame2.ImageColor3 = frame2.BackgroundColor3
+				end)]]
+
+				if Alert_Type == "Warning" then
+
+					local icon = Instance.new("ImageLabel")
+					icon.Name = "AlertIcon"
+					icon.Image = GetAssetFunc('FinityGUI/assets/WarningNotification.png')
+					icon.BackgroundTransparency = 1
+					icon.BorderSizePixel = 0
+					icon.Position = UDim2.new(0, -17, 0, -6)
+					icon.Size = UDim2.new(0, 90, 0, 90)
+					icon.Parent = container
+
+					local Warningsound = Instance.new("Sound")
+					Warningsound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_2.wav")
+					Warningsound.Parent = container
+					Warningsound:Play()
+
+
+					if Warningsound.Ended then
+						Warningsound:Destroy()
+					end
+
+				elseif Alert_Type == "Info" then
+
+					local icon = Instance.new("ImageLabel")
+					icon.Name = "AlertIcon"
+					icon.Image = GetAssetFunc('FinityGUI/assets/InfoNotification.png')
+					icon.BackgroundTransparency = 1
+					icon.BorderSizePixel = 0
+					icon.Position = UDim2.new(0, -17, 0, -6)
+					icon.Size = UDim2.new(0, 90, 0, 90)
+					icon.Parent = container
+
+					local Infosound = Instance.new("Sound")
+					Infosound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
+					Infosound.Parent = container
+					Infosound:Play()
+
+					if Infosound.Ended then
+						Infosound:Destroy()
+					end
+
+				elseif Alert_Type == "Success" then
+
+					local icon = Instance.new("ImageLabel")
+					icon.Name = "AlertIcon"
+					icon.Image = GetAssetFunc('FinityGUI/assets/Success.png')
+					icon.BackgroundTransparency = 1
+					icon.BorderSizePixel = 0
+					icon.Position = UDim2.new(0, 7, 0, 14) -- the image is much bigger than others idk why
+					icon.Size = UDim2.new(0, 40, 0, 40)
+					icon.Parent = container
+
+					local Success_sound = Instance.new("Sound")
+					Success_sound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
+					Success_sound.Parent = container
+					Success_sound:Play()
+
+					if Success_sound.Ended then
+						Success_sound:Destroy()
+					end
+
+				end
+
+				if Alert_Type == "Info" then
+
+					local Title = Instance.new("TextLabel")
+					Title.Font = Enum.Font.Gotham
+					Title.TextSize = 13
+					Title.RichText = true
+					Title.TextTransparency = 0
+					Title.TextColor3 = theme.notification_info
+					Title.BackgroundTransparency = 1
+					Title.Position = UDim2.new(0, 56, 0, 18)
+					Title.TextXAlignment = Enum.TextXAlignment.Left
+					Title.TextYAlignment = Enum.TextYAlignment.Top
+					Title.Text = "<b>"..TopText.."</b>"
+					Title.Parent = container
+
+					local Content = Title:Clone()
+					Content.Position = UDim2.new(0, 56, 0, 44)
+					Content.Font = Enum.Font.Gotham
+					Content.TextTransparency = 0
+					Content.RichText = true
+					Title.TextColor3 = theme.notification_info
+					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Parent = container
+
+				elseif Alert_Type == "Warning" then
+
+					local Title = Instance.new("TextLabel")
+					Title.Font = Enum.Font.Gotham
+					Title.TextSize = 13
+					Title.RichText = true
+					Title.TextTransparency = 0
+					Title.TextColor3 = theme.notification_warn
+					Title.BackgroundTransparency = 1
+					Title.Position = UDim2.new(0, 56, 0, 18)
+					Title.TextXAlignment = Enum.TextXAlignment.Left
+					Title.TextYAlignment = Enum.TextYAlignment.Top
+					Title.Text = "<b>"..TopText.."</b>"
+					Title.Parent = container
+
+					local Content = Title:Clone()
+					Content.Position = UDim2.new(0, 56, 0, 44)
+					Content.Font = Enum.Font.Gotham
+					Content.TextTransparency = 0
+					Content.RichText = true
+					Title.TextColor3 = theme.notification_info
+					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Parent = container
+
+				elseif Alert_Type == "Success" then
+
+					local Title = Instance.new("TextLabel")
+					Title.Font = Enum.Font.Gotham
+					Title.TextSize = 13
+					Title.RichText = true
+					Title.TextTransparency = 0
+					Title.TextColor3 = theme.notification_success
+					Title.BackgroundTransparency = 1
+					Title.Position = UDim2.new(0, 56, 0, 18)
+					Title.TextXAlignment = Enum.TextXAlignment.Left
+					Title.TextYAlignment = Enum.TextYAlignment.Top
+					Title.Text = "<b>"..TopText.."</b>"
+					Title.Parent = container
+
+					local Content = Title:Clone()
+					Content.Position = UDim2.new(0, 56, 0, 44)
+					Content.Font = Enum.Font.Gotham
+					Content.TextTransparency = 0
+					Content.RichText = true
+					Title.TextColor3 = theme.notification_info
+					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Parent = container
+
+				end
+				-- forces the notification to close if its right/left clicked or middle mouse clicked
+				container.InputBegan:Connect(function(input)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.MouseButton2 or Enum.UserInputType.MouseButton3 then
+						task.spawn(function()
+							pcall(function()
+								finity.bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+								task.wait(0.15)
+								finity.bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+								task.wait(0.15)
+								container:Destroy()
+							end)
+						end)
+					end
+				end)
+
+				task.spawn(function()
+					pcall(function()
+						bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						task.wait(0.15)
+						frame2:TweenSize(UDim2.new(0, 0, 0, 2), Enum.EasingDirection.In, Enum.EasingStyle.Linear, Duration, true)
+						task.wait(Duration)
+						bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						task.wait(0.15)
+						container:Destroy()
+					end)
+				end)
+				return container
+			end
+
 			function self2:Category(name)
 				local category = {}
 
@@ -1707,7 +1944,7 @@ end)
 	The code for the toast is from Vape Same for the bettertween2 function: https://github.com/7GrandDadPGN/VapeV4ForRoblox
 ]]
 
-	local bettertween2 = function(obj, newpos, dir, style, time, override)
+	function finity.bettertween2(obj, newpos, dir, style, time, override)
 		task.spawn(function()
 			local frame = Instance.new("Frame")
 			frame.Visible = false
@@ -1734,254 +1971,11 @@ end)
 		end
 	end
 
-	function finity.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
-
-        local notificationwindow = Instance.new("Frame")
-		notificationwindow.BackgroundTransparency = 1
-		notificationwindow.Active = false
-		notificationwindow.Parent = finity.gs["CoreGui"]
-		notificationwindow.Size = UDim2.new(1, 0, 1, 0)
-        notificationwindow.Name = "Notification Window Container"
-
-		if not finity.gs["CoreGui"]:FindFirstChild("Finity") then
-			warn("Please do finity.new() before trying to create Notifications.")
-            notificationwindow:Destroy()
-
-		elseif finity.gs["CoreGui"]:FindFirstChild("Finity") then
-			if debug then
-				notificationwindow.Parent = self2.userinterface
-				print("Finity ScreenGUI exists. Setting Parent to Finity's ScreenGUI and Continuing.")
-			end
-		end
-
-		notificationwindow.ChildRemoved:Connect(function()
-			for i,v in pairs(notificationwindow:GetChildren()) do
-				bettertween(v, UDim2.new(1, v.Position.X.Offset, 1, -(150 + 80 * (i - 1))), Enum.EasingDirection.In, Enum.EasingStyle.Sine, Duration, true)
-			end
-		end)
-
-		local offset = #notificationwindow:GetChildren()
-
-		local container = Instance.new("Frame")
-		container.Size = UDim2.new(0, 266, 0, 75)
-		container.Position = UDim2.new(1, 0, 1, -(150 + 80 * offset))
-		container.BackgroundTransparency = 0
-		container.BackgroundColor3 = theme.main_container
-		container.BorderSizePixel = 0
-		container.Parent = notificationwindow
-		container.Visible = true
-		container.ClipsDescendants = false
-		container.Name = "container"
-
-		local backgroundImg = Instance.new("ImageLabel")
-		backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
-		backgroundImg.Position = UDim2.new(0, -61, 0, -50)
-		backgroundImg.BackgroundTransparency = 1
-		backgroundImg.Name = "backgroundImg"
-		backgroundImg.ScaleType = Enum.ScaleType.Slice
-		backgroundImg.Size = UDim2.new(1, 61, 0, 159)
-		backgroundImg.Parent = container
-
-		if not CustomBackgroundIcon == nil or not CustomBackgroundIcon == "" or not CustomBackgroundIcon == " " then
-
-			local backgroundImg = Instance.new("ImageLabel")
-			backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
-			backgroundImg.Position = UDim2.new(0, -61, 0, -50)
-			backgroundImg.BackgroundTransparency = 1
-			backgroundImg.Name = "backgroundImg"
-			backgroundImg.ScaleType = Enum.ScaleType.Slice
-			backgroundImg.Image = GetAssetFunc(CustomBackgroundIcon)
-			backgroundImg.Size = UDim2.new(1, 61, 0, 159)
-			backgroundImg.Parent = container
-		end
-
-		local uicorner = Instance.new("UICorner")
-		uicorner.CornerRadius = UDim.new(0, 6)
-		uicorner.Parent = container
-
-		local frame2 = Instance.new("ImageLabel")
-		frame2.BackgroundColor3 = theme.main_container
-		frame2.Name = "Timer"
-		frame2.BackgroundTransparency = 0
-		frame2.SliceCenter = Rect.new(2, 0, 224, 2)
-		frame2.Size = UDim2.new(1, 0, 0, 2)
-		frame2.ScaleType = Enum.ScaleType.Slice
-		frame2.Position = UDim2.new(0, 3, 1, -3)
-		frame2.ZIndex = 2
-		frame2.Active = true
-		frame2.Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png")
-		frame2.BorderSizePixel = 0
-		frame2.Parent = container
-
-		--[[frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
-			frame2.ImageColor3 = frame2.BackgroundColor3
-		end)]]
-
-		if Alert_Type == "Warning" then
-
-			local icon = Instance.new("ImageLabel")
-			icon.Name = "AlertIcon"
-			icon.Image = GetAssetFunc('FinityGUI/assets/WarningNotification.png')
-			icon.BackgroundTransparency = 1
-			icon.BorderSizePixel = 0
-			icon.Position = UDim2.new(0, -17, 0, -6)
-			icon.Size = UDim2.new(0, 90, 0, 90)
-			icon.Parent = container
-
-			local Warningsound = Instance.new("Sound")
-			Warningsound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_2.wav")
-			Warningsound.Parent = container
-			Warningsound:Play()
+	function finity.PlayLocalSound(SoundAsset: string)
+		local soundtoplay = GetAssetFunc(SoundAsset)
 
 
-			if Warningsound.Ended then
-				Warningsound:Destroy()
-			end
-
-		elseif Alert_Type == "Info" then
-
-			local icon = Instance.new("ImageLabel")
-			icon.Name = "AlertIcon"
-			icon.Image = GetAssetFunc('FinityGUI/assets/InfoNotification.png')
-			icon.BackgroundTransparency = 1
-			icon.BorderSizePixel = 0
-			icon.Position = UDim2.new(0, -17, 0, -6)
-			icon.Size = UDim2.new(0, 90, 0, 90)
-			icon.Parent = container
-
-			local Infosound = Instance.new("Sound")
-			Infosound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
-			Infosound.Parent = container
-			Infosound:Play()
-
-			if Infosound.Ended then
-				Infosound:Destroy()
-			end
-
-		elseif Alert_Type == "Success" then
-
-			local icon = Instance.new("ImageLabel")
-			icon.Name = "AlertIcon"
-			icon.Image = GetAssetFunc('FinityGUI/assets/Success.png')
-			icon.BackgroundTransparency = 1
-			icon.BorderSizePixel = 0
-			icon.Position = UDim2.new(0, 7, 0, 14) -- the image is much bigger than others idk why
-			icon.Size = UDim2.new(0, 40, 0, 40)
-			icon.Parent = container
-
-			local Success_sound = Instance.new("Sound")
-			Success_sound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
-			Success_sound.Parent = container
-			Success_sound:Play()
-
-			if Success_sound.Ended then
-				Success_sound:Destroy()
-			end
-
-		end
-
-		if Alert_Type == "Info" then
-
-			local Title = Instance.new("TextLabel")
-			Title.Font = Enum.Font.Gotham
-			Title.TextSize = 13
-			Title.RichText = true
-			Title.TextTransparency = 0
-			Title.TextColor3 = theme.notification_info
-			Title.BackgroundTransparency = 1
-			Title.Position = UDim2.new(0, 56, 0, 18)
-			Title.TextXAlignment = Enum.TextXAlignment.Left
-			Title.TextYAlignment = Enum.TextYAlignment.Top
-			Title.Text = "<b>"..TopText.."</b>"
-			Title.Parent = container
-
-			local Content = Title:Clone()
-			Content.Position = UDim2.new(0, 56, 0, 44)
-			Content.Font = Enum.Font.Gotham
-			Content.TextTransparency = 0
-			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
-			Content.Text = "<b>"..BottomText.."</b>"
-			Content.Parent = container
-
-		elseif Alert_Type == "Warning" then
-
-			local Title = Instance.new("TextLabel")
-			Title.Font = Enum.Font.Gotham
-			Title.TextSize = 13
-			Title.RichText = true
-			Title.TextTransparency = 0
-			Title.TextColor3 = theme.notification_warn
-			Title.BackgroundTransparency = 1
-			Title.Position = UDim2.new(0, 56, 0, 18)
-			Title.TextXAlignment = Enum.TextXAlignment.Left
-			Title.TextYAlignment = Enum.TextYAlignment.Top
-			Title.Text = "<b>"..TopText.."</b>"
-			Title.Parent = container
-
-			local Content = Title:Clone()
-			Content.Position = UDim2.new(0, 56, 0, 44)
-			Content.Font = Enum.Font.Gotham
-			Content.TextTransparency = 0
-			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
-			Content.Text = "<b>"..BottomText.."</b>"
-			Content.Parent = container
-
-		elseif Alert_Type == "Success" then
-
-			local Title = Instance.new("TextLabel")
-			Title.Font = Enum.Font.Gotham
-			Title.TextSize = 13
-			Title.RichText = true
-			Title.TextTransparency = 0
-			Title.TextColor3 = theme.notification_success
-			Title.BackgroundTransparency = 1
-			Title.Position = UDim2.new(0, 56, 0, 18)
-			Title.TextXAlignment = Enum.TextXAlignment.Left
-			Title.TextYAlignment = Enum.TextYAlignment.Top
-			Title.Text = "<b>"..TopText.."</b>"
-			Title.Parent = container
-
-			local Content = Title:Clone()
-			Content.Position = UDim2.new(0, 56, 0, 44)
-			Content.Font = Enum.Font.Gotham
-			Content.TextTransparency = 0
-			Content.RichText = true
-			Title.TextColor3 = theme.notification_info
-			Content.Text = "<b>"..BottomText.."</b>"
-			Content.Parent = container
-
-		end
-		-- forces the notification to close if its right/left clicked or middle mouse clicked
-		container.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.MouseButton2 or Enum.UserInputType.MouseButton3 then
-				task.spawn(function()
-					pcall(function()
-						bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
-						task.wait(0.15)
-						bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
-						task.wait(0.15)
-						container:Destroy()
-					end)
-				end)
-			end
-		end)
-
-		task.spawn(function()
-			pcall(function()
-				bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
-				task.wait(0.15)
-				frame2:TweenSize(UDim2.new(0, 0, 0, 2), Enum.EasingDirection.In, Enum.EasingStyle.Linear, Duration, true)
-				task.wait(Duration)
-				bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
-				task.wait(0.15)
-				container:Destroy()
-			end)
-		end)
-		return container
 	end
-
 
 if not suc then warn(err) end
 
