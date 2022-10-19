@@ -23,14 +23,14 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 
 # Features
 <ol>
-<li>Dark/Light themes</li>
+<li>Importable themes</li>
 <li>Changeable menu toggle keys</li>
 <li>Custom size & background image</li>
 <li>Use custom themes along with the original themes by editing the theme dictionary!</li>
 <li>Clean Gui/Design</li>
 <li>Edit/Make custom keybinds (can set default binds)</li>
-<li>Color pickers</li>
 <li>Proper callbacks for each of the cool types of modules</li>
+<li>Notification popups</li>
 </ol>
 
 # Overview
