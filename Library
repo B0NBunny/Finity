@@ -186,7 +186,7 @@ finity.themes = {
 	}
 }
 
-local theme
+local theme = finity.themes.Dark -- defaults to dark
 
 -- Pretty much just sets the table to `game:GetService`
 setmetatable(finity.gs, {
@@ -292,6 +292,12 @@ local suc, err = pcall(function()
 		end
 
 		function finity.new(Title, IsDark, CustomTheme, CustomThemeName, HideToolTip, ToolTipText)
+
+			for theme_names, junk in pairs(finity.themes) do
+				if not CustomThemeName == theme_names then
+					error("Theme name: "..CustomThemeName.."\nDoesn't exist.", 5)
+				end
+			end
 
 			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
 				if debug then
@@ -1730,36 +1736,21 @@ end)
 
 	function finity.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
 
+        local notificationwindow = Instance.new("Frame")
+		notificationwindow.BackgroundTransparency = 1
+		notificationwindow.Active = false
+		notificationwindow.Parent = finity.gs["CoreGui"]
+		notificationwindow.Size = UDim2.new(1, 0, 1, 0)
+        notificationwindow.Name = "Notification Window Container"
+
 		if not finity.gs["CoreGui"]:FindFirstChild("Finity") then
-			-- If we cannot find the Finity gui ScreenGUI then we will create it anyway and then continue as normal.
-			local notificationwindow = Instance.new("Frame")
-			notificationwindow.BackgroundTransparency = 1
-			notificationwindow.Active = false
-			notificationwindow.Parent = finity.gs["CoreGui"]
-			notificationwindow.Size = UDim2.new(1, 0, 1, 0)
-			notificationwindow.Name = "Notification Window Container"
+			warn("Please do finity.new() before trying to create Notifications.")
+            notificationwindow:Destroy()
+
 		elseif finity.gs["CoreGui"]:FindFirstChild("Finity") then
 			if debug then
 				notificationwindow.Parent = self2.userinterface
 				print("Finity ScreenGUI exists. Setting Parent to Finity's ScreenGUI and Continuing.")
-			end
-		end
-
-        local notificationwindow = Instance.new("Frame")
-		notificationwindow.BackgroundTransparency = 1
-		notificationwindow.Active = false
-		notificationwindow.Parent = self2.userinterface
-		notificationwindow.Size = UDim2.new(1, 0, 1, 0)
-        notificationwindow.Name = "Notification Window Container"
-
-		if not finity.gs["CoreGui"]:FindFirstChild("Finity")["Notification Window Container"] then
-			if debug then
-				print("Made Notification Window Container.")
-			end
-
-        elseif finity.gs["CoreGui"]:FindFirstChild("Finity")["Notification Window Container"] then
-			if debug then
-				print("Notification Window Container exists, Continuing.")
 			end
 		end
 
@@ -1990,6 +1981,7 @@ end)
 		end)
 		return container
 	end
+
 
 if not suc then warn(err) end
 
