@@ -1,3 +1,12 @@
+### Interesting places to go:
+
+[Introduction](#finity)<br>
+[Features](#features)<br>
+[Overview](#overview)<br>
+[Docs](#documentation)<br>
+[Support Me](#support-me)<br>
+[Discord](#join-the-community)<br>
+
 # Disclaimer for fork's
 
 You may fork this project but may only use it for personal use, If you want to contribute to this project please open a Suggestion inside the discord and submit it there.
@@ -12,7 +21,7 @@ The following applies to older and future version of this Library.
 Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and customisable GUI for their users.
 (This was originaly created by a user on [V3RMillion](https://v3rmillion.net/showthread.php?tid=922755) but they have since abondoned it)
 
-# Finity's Features
+# Features
 <ol>
 <li>Dark/Light themes</li>
 <li>Changeable menu toggle keys</li>
@@ -24,13 +33,13 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 <li>Proper callbacks for each of the cool types of modules</li>
 </ol>
 
-# Finity Overview
+# Overview
 
 <p align="center">
    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.vgy.me%2F9qBw9N.gif"/>
 </p>
 
-# Finity's Documentation
+# Documentation
 
 <p align="center">
   <a href="https://localsmail.gitbook.io/finity-docs">Click me to view the docs</a>
