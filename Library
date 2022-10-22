@@ -51,7 +51,9 @@ You may edit the fork of this but MUST follow the above expectations/requirement
 	-- a template for the support that is to come
 
 	if isfile('FinityGUI/Customthemes.lua') then
-		print('File already exists.')
+		if debug then 
+			print('CustomThemes file exists.')
+		end
 	elseif not isfile('FinityGUI/Customthemes.lua') then
 		writefile('FinityGUI/Customthemes.lua', game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua"))
 	end
