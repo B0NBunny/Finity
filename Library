@@ -40,18 +40,12 @@ local DFAA = function()
 	makefolder('FinityGUI')
 	makefolder('FinityGUI/assets')
 	makefolder('FinityGUI/assets/custom') -- stores third part assets
-	writefile('FinityGUI/FinityDosAndDonts.txt', [[You may fork this project but may only use it for personal use, If you want to contribute to this project please open a Suggestion inside the discord and submit it there.
-
-The following applies to older and future version of this Library.
-
-You may not make money off this in any way, If you use this inside any paid script hubs then this will not apply until otherwise.
-You may make it a personal project but MUST give credit, You can do this by crediting us in the top, middle or bottom of your read me and MUST not remove the prints that give credits.
-You may edit the fork of this but MUST follow the above expectations/requirements and you MUST not claim this as your own in anyway apart for adding xyz to the fork as that is your own work, Anything other than your own work/modifications will belong to the Finity Github repository: https://github.com/LocalSmail/Finity/]])
+	writefile('FinityGUI/FinityDosAndDonts.txt', game:HttpGet("https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont"))
 
 	-- a template for the support that is to come
 
 	if isfile('FinityGUI/Customthemes.lua') then
-		if debug then 
+		if debug then
 			print('CustomThemes file exists.')
 		end
 	elseif not isfile('FinityGUI/Customthemes.lua') then
@@ -737,17 +731,18 @@ local suc, err = pcall(function()
 
 				task.spawn(function()
 					pcall(function()
-						bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						finity.bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
 						task.wait(0.15)
 						frame2:TweenSize(UDim2.new(0, 0, 0, 2), Enum.EasingDirection.In, Enum.EasingStyle.Linear, Duration, true)
 						task.wait(Duration)
-						bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
+						finity.bettertween2(container, UDim2.new(1, 0, 1, container.Position.Y.Offset), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
 						task.wait(0.15)
 						container:Destroy()
 					end)
 				end)
 				return container
 			end
+
 
 			function self2:Category(name)
 				local category = {}
@@ -1971,12 +1966,6 @@ end)
 		else
 			debug = false
 		end
-	end
-
-	function finity.PlayLocalSound(SoundAsset: string)
-		local soundtoplay = GetAssetFunc(SoundAsset)
-
-
 	end
 
 if not suc then warn(err) end
