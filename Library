@@ -1655,7 +1655,7 @@ local suc, err = pcall(function()
 								cheat.sliderbar.Parent = cheat.container
 
 							elseif string.lower(kind) == "button" then
-								local button_text = data and data.text
+								local button_text = name
 
 								cheat.background = finity:Create("ImageLabel", {
 									Name = "Background",
@@ -1679,7 +1679,7 @@ local suc, err = pcall(function()
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
 									Font = Enum.Font.Gotham,
-									Text = button_text or "Button",
+									Text = button_text, --or "Button",
 									TextColor3 = theme.textbox_text,
 									TextSize = 13,
 									TextXAlignment = Enum.TextXAlignment.Center
