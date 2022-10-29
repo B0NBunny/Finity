@@ -18,9 +18,8 @@ local Asset_Names = {
 	"CheatList.png",
 	"CheatSliderbar.png",
 	"CheatVisiFrame.png",
-	"NotifSound_2.wav",
 	"DropDown.png",
-	"NotifSound_1.wav",
+	"NotifSound.wav",
 	"HSVBar.png",
 	"InfoNotification.png",
 	"NotificationBar.png",
@@ -131,8 +130,7 @@ finity.themes = {
 		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		NotifSound_1 = "FinityGUI/assets/Enable.wav",
-		NotifSound_2 = "FinityGUI/assets/Disable.wav"
+		NotifSound = "FinityGUI/assets/NotifSound.wav",
 
 	},
 
@@ -176,8 +174,7 @@ finity.themes = {
 		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		NotifSound_1 = "FinityGUI/assets/NotifSound_1.wav",
-		NotifSound_2 = "FinityGUI/assets/NotifSound_2.wav"
+		NotifSound = "FinityGUI/assets/NotifSound.wav",
 
 	}
 }
