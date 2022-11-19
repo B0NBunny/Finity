@@ -37,7 +37,7 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 # Overview
 
 <p align="center">
-   <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.vgy.me%2F9qBw9N.gif"/>
+   <img src="https://github.com/LocalSmail/Finity/blob/main/Github%20Asset/VP1KWO3YCd.gif?raw=true"/>
 </p>
 
 # Documentation
