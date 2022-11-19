@@ -6,7 +6,6 @@
 [Docs](#documentation)<br>
 [Support Me](#support-me)
 [Discord](#join-the-community)<br>
-[Bugs](#known-bugs)
 
 # Disclaimer for fork's
 
@@ -55,12 +54,6 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 <p align=centre>
    <a href="https://discord.gg/CenXcThBFv">Join our Discord Community and be notified on community polls for new features and support!</a>
 </p>
-
-# Known Bugs
-
-|      Bug name         |             Issue                 |
-| --------------------- | --------------------------------- |
-| Notification Content  | Cotent doesnt display correctly.  |
 
 # Credits
 
