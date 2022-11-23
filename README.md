@@ -1,5 +1,7 @@
 ### Interesting places to go:
 
+<p><i><b><a href="https://github.com/LocalSmail/Finity/blob/main/LICENSE">If you think the License is the same as an apache license please check!</a></i></b></p> 
+
 [Introduction](#finity)
 [Features](#features)<br>
 [Overview](#overview)
@@ -34,6 +36,8 @@ Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and
 </ol>
 
 # Overview
+
+<i><b><p>Old gif</p></b></i>
 
 <p align="center">
    <img src="https://github.com/LocalSmail/Finity/blob/main/Github%20Asset/VP1KWO3YCd.gif?raw=true"/>
