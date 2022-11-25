@@ -5,11 +5,16 @@ local finityObject = {}
 local self2 = finityObject
 local self = finity
 
-local getasset = getsynasset or getcustomasset
+local getasset = getsynasset or getcustomasset -- stolen from: github.com/7GrandDadPGN/VapeV4ForRoblox tehe
 
 local Version = "1.0.2"
 local Discord = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/discord"))()
 local debug = false -- Set to true to enable debugging.
+
+if writefile then
+elseif not writefile then
+	print("Your executor does not support the writefile() function. We do not support your injector.")
+end
 
 local Asset_Names = {
 	"Arrow.png",
@@ -28,65 +33,6 @@ local Asset_Names = {
 	"WarningNotification.png",
 	"WindowBlur.png"
 }
-
-if writefile then
-elseif not writefile then
-	print("Your executor does not support the writefile() function. We do not support your injector.")
-end
-
--- Here we will make the folders needed by finity which will store data/assets.
-local DFAA = function()
-	makefolder('FinityGUI')
-	makefolder('FinityGUI/assets')
-	makefolder('FinityGUI/assets/custom') -- stores third part assets
-	writefile('FinityGUI/FinityDosAndDonts.txt', game:HttpGet("https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont"))
-
-	-- a template for the support that is to come
-
-	if isfile('FinityGUI/Customthemes.lua') then
-		if debug then
-			print('CustomThemes file exists.')
-		end
-	elseif not isfile('FinityGUI/Customthemes.lua') then
-		writefile('FinityGUI/Customthemes.lua', game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua"))
-	end
-
-	for i, v in Asset_Names do
-		writefile('FinityGUI/assets/'..v, game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v))
-	end
-
-end
-
-DFAA()
-
-function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
-	print("Downloading custom asset from: "..link)
-
-	if not IsCustomThemeFile then
-		writefile('FinityGUI/assets/custom/'..AssetName, game:HttpGet(link))
-
-	elseif IsCustomThemeFile and AssetName == nil or AssetName == "" or AssetName == " " then
-		print("Downloading custom Customtheme.lua file")
-		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
-
-		-- Same as the function above just checks if the AssetName has a value just incase a random shitty error gets thrown
-	elseif IsCustomThemeFile and not AssetName == nil or not AssetName == "" or not AssetName == " " then
-		print("Downloading custom Customtheme.lua file.")
-		warn("Tip: You dont have to put anything inside the AssetName argument, We parse the file name by default!")
-		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
-
-	end
-end
-
--- Gets the asset parsed
-local GetAssetFunc = function(path: string)
-		--[[if not isfile(path) then -- Not working, needs fixing. On todo
-			print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
-			DFAA()
-		end]]
-
-	return getasset(path)
-end
 
 finity.themes = {
 
@@ -119,6 +65,7 @@ finity.themes = {
 		dropdown_text = Color3.fromRGB(195, 195, 195),
 		dropdown_text_hover = Color3.fromRGB(232, 232, 232),
 		dropdown_scrollbar_color = Color3.fromRGB(118, 118, 121),
+		dropdown_scrollbar_thickness = 4,
 
 		button_background = Color3.fromRGB(103, 103, 106),
 		button_background_hover = Color3.fromRGB(137, 137, 141),
@@ -163,6 +110,7 @@ finity.themes = {
 		dropdown_text = Color3.fromRGB(112, 112, 112),
 		dropdown_text_hover = Color3.fromRGB(50, 50, 50),
 		dropdown_scrollbar_color = Color3.fromRGB(198, 189, 202),
+		dropdown_scrollbar_thickness = 4,
 
 		button_background = Color3.fromRGB(198, 189, 202),
 		button_background_hover = Color3.fromRGB(215, 206, 227),
@@ -179,6 +127,63 @@ finity.themes = {
 	}
 }
 
+-- Here we will make the folders needed by finity which will store data/assets.
+local DFAA = function()
+	makefolder('FinityGUI')
+	makefolder('FinityGUI/assets')
+	makefolder('FinityGUI/assets/custom') -- stores third part assets
+	writefile('FinityGUI/FinityDosAndDonts.txt', game:HttpGet("https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont"))
+
+	-- a template for the support that is to come
+
+	if isfile('FinityGUI/Customthemes.lua') then
+		if debug then
+			print('CustomThemes file exists.')
+		end
+	elseif not isfile('FinityGUI/Customthemes.lua') then
+		writefile('FinityGUI/Customthemes.lua', game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua"))
+	end
+
+	for i, v in Asset_Names do
+		writefile('FinityGUI/assets/'..v, game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v))
+	end
+
+end
+
+if not isfolder('FinityGUI') then
+	print('Creating FinityGUI folders in workspace.')
+	DFAA()
+end
+
+function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
+	print("Downloading custom asset from: "..link)
+
+	if not IsCustomThemeFile then
+		writefile('FinityGUI/assets/custom/'..AssetName, game:HttpGet(link))
+
+	elseif IsCustomThemeFile and AssetName == nil or AssetName == "" or AssetName == " " then
+		print("Downloading custom Customtheme.lua file")
+		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+
+		-- Same as the function above just checks if the AssetName has a value just incase a random shitty error gets thrown
+	elseif IsCustomThemeFile and not AssetName == nil or not AssetName == "" or not AssetName == " " then
+		print("Downloading custom Customtheme.lua file.")
+		warn("Tip: You dont have to put anything inside the AssetName argument, We parse the file name by default!")
+		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+
+	end
+end
+
+-- Gets the asset parsed
+local GetAssetFunc = function(path: string)
+		--[[if not isfile(path) then -- Not working, needs fixing. On todo
+			print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
+			DFAA()
+		end]]
+
+	return getasset(path)
+end
+
 local theme = finity.themes.Dark -- defaults to dark
 
 -- Pretty much just sets the table to `game:GetService`
@@ -192,7 +197,6 @@ setmetatable(finity.gs, {
 		return
 	end
 })
-
 
 function finity.ImportCustomThemes(Theme_Name)
 	local CustomthemeScript = loadfile("FinityGUI/Customthemes.lua")()
@@ -215,11 +219,13 @@ local suc, err = pcall(function()
 	if game.Loaded then
 
 		print([[
+
 			_____ ___ _   _ ___ _______   __
 			|  ___|_ _| \ | |_ _|_   _\ \ / /
 			| |_   | ||  \| || |  | |  \ V /
 			|  _|  | || |\  || |  | |   | |
 			|_|   |___|_| \_|___| |_|   |_|
+
 		]])
 
 		print("You are using Finity version "..Version)
@@ -240,18 +246,40 @@ local suc, err = pcall(function()
 			return object
 		end
 
+		function finity:RedownloadAssets()
+			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
+				if debug then
+					warn("Finity already exists, Destorying old GUI to prevent any issues.")
+				end
+                finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy() -- lazy way of preventing dupelicates of the gui from appearing
+			end
+
+			DFAA()
+			warn("Please wait while we re-download finity's assets again. Doing anything else could corrupt assets or cause undesired behaviour.")
+		end
+
+		function self2.setTitle(text: string)
+			self2.title.Text = text
+		end
+
 		function finity:addShadow(object, transparency)
-			local shadow = self:Create("ImageLabel", {
+
+			if transparency > 1 then
+				transparency = 0.5
+			end
+
+			local shadow = self:Create('ImageLabel', {
 				Name = "Shadow",
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundTransparency = 1,
 				Position = UDim2.new(0.5, 0, 0.5, 4),
 				Size = UDim2.new(1, 6, 1, 6),
 				Image = GetAssetFunc("FinityGUI/assets/WindowBlur.png"),
-				ImageTransparency = transparency and true or 0.5,
+				ImageTransparency = transparency or 0.5,
 				ImageColor3 = Color3.fromRGB(35, 35, 35),
 				ScaleType = Enum.ScaleType.Slice,
-			    SliceCenter = Rect.new(10, 10, 118, 118)
+			    SliceCenter = Rect.new(10, 10, 118, 118),
+				Active = true,
 			})
 
 			shadow.Parent = object
@@ -278,7 +306,7 @@ local suc, err = pcall(function()
 					s.archivable = true
 					s.TimePosition = 0
 
-					s.Parent = game.Workspace
+					s.Parent = game.Workspace.CurrentCamera
 
 					s:Play()
 			end
@@ -339,11 +367,11 @@ local suc, err = pcall(function()
 
 						if toggled then
 
-							self2.Container.Active = true
+							self2.Container.Active = true -- uncommented
 
 							pcall(self2.container.TweenPosition, self2.container, savedposition, "Out", "Sine", 0.5, true)
 						else
-							--savedposition = self2.container.Position;
+							savedposition = self2.container.Position;
 							pcall(self2.container.TweenPosition, self2.container, UDim2.new(savedposition.Width.Scale, savedposition.Width.Offset, 1.5, 0), "Out", "Sine", 0.5, true)
 						end
 					end
@@ -404,15 +432,14 @@ local suc, err = pcall(function()
 				Modal = true;
 			})
 
+			self2.container.Draggable = true
+			self2.container.Active = true
+
 			self2.modal.Parent = self2.userinterface; -- Sets the parent of the button
 
 			if thinProject and typeof(thinProject) == "UDim2" then
 				self2.container.Size = thinProject
 			end
-
-			self2.container.Draggable = true
-
-			self2.container.Active = true
 
 			self2.sidebar = self:Create("Frame", {
 				Name = "Sidebar",
@@ -503,23 +530,23 @@ local suc, err = pcall(function()
 			uilistlayout.Parent = self2.sidebar
 			uilistlayout = nil
 
-			function self2.ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
-
+			function self2:ToastMessage(TopText: string, BottomText: string, Duration: number, Alert_Type: string, CustomBackgroundIcon: string)
+		
 				local notificationwindow = Instance.new("Frame")
 				notificationwindow.BackgroundTransparency = 1
 				notificationwindow.Active = false
 				notificationwindow.Parent = self2.userinterface
 				notificationwindow.Size = UDim2.new(1, 0, 1, 0)
-				notificationwindow.Name = "Notification Window Container"
-
+				notificationwindow.Name = "NotifWindow"
+		
 				notificationwindow.ChildRemoved:Connect(function()
 					for i,v in pairs(notificationwindow:GetChildren()) do
 						finity.bettertween(v, UDim2.new(1, v.Position.X.Offset, 1, -(150 + 80 * (i - 1))), Enum.EasingDirection.In, Enum.EasingStyle.Sine, Duration, true)
 					end
 				end)
-
+		
 				local offset = #notificationwindow:GetChildren()
-
+		
 				local container = Instance.new("Frame")
 				container.Size = UDim2.new(0, 266, 0, 75)
 				container.Position = UDim2.new(1, 0, 1, -(150 + 80 * offset))
@@ -530,7 +557,7 @@ local suc, err = pcall(function()
 				container.Visible = true
 				container.ClipsDescendants = false
 				container.Name = "container"
-
+		
 				local backgroundImg = Instance.new("ImageLabel")
 				backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
 				backgroundImg.Position = UDim2.new(0, -61, 0, -50)
@@ -539,9 +566,9 @@ local suc, err = pcall(function()
 				backgroundImg.ScaleType = Enum.ScaleType.Slice
 				backgroundImg.Size = UDim2.new(1, 61, 0, 159)
 				backgroundImg.Parent = container
-
+		
 				if not CustomBackgroundIcon == nil or not CustomBackgroundIcon == "" or not CustomBackgroundIcon == " " then
-
+		
 					local backgroundImg = Instance.new("ImageLabel")
 					backgroundImg.SliceCenter = Rect.new(67, 59, 323, 120)
 					backgroundImg.Position = UDim2.new(0, -61, 0, -50)
@@ -552,11 +579,11 @@ local suc, err = pcall(function()
 					backgroundImg.Size = UDim2.new(1, 61, 0, 159)
 					backgroundImg.Parent = container
 				end
-
+		
 				local uicorner = Instance.new("UICorner")
 				uicorner.CornerRadius = UDim.new(0, 6)
 				uicorner.Parent = container
-
+		
 				local frame2 = Instance.new("ImageLabel")
 				frame2.BackgroundColor3 = theme.main_container
 				frame2.Name = "Timer"
@@ -570,13 +597,13 @@ local suc, err = pcall(function()
 				frame2.Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png")
 				frame2.BorderSizePixel = 0
 				frame2.Parent = container
-
+		
 				--[[frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
 					frame2.ImageColor3 = frame2.BackgroundColor3
 				end)]]
-
+		
 				if Alert_Type == "Warning" then
-
+		
 					local icon = Instance.new("ImageLabel")
 					icon.Name = "AlertIcon"
 					icon.Image = GetAssetFunc('FinityGUI/assets/WarningNotification.png')
@@ -585,19 +612,9 @@ local suc, err = pcall(function()
 					icon.Position = UDim2.new(0, -17, 0, -6)
 					icon.Size = UDim2.new(0, 90, 0, 90)
 					icon.Parent = container
-
-					local Warningsound = Instance.new("Sound")
-					Warningsound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_2.wav")
-					Warningsound.Parent = container
-					Warningsound:Play()
-
-
-					if Warningsound.Ended then
-						Warningsound:Destroy()
-					end
-
+		
 				elseif Alert_Type == "Info" then
-
+		
 					local icon = Instance.new("ImageLabel")
 					icon.Name = "AlertIcon"
 					icon.Image = GetAssetFunc('FinityGUI/assets/InfoNotification.png')
@@ -606,18 +623,9 @@ local suc, err = pcall(function()
 					icon.Position = UDim2.new(0, -17, 0, -6)
 					icon.Size = UDim2.new(0, 90, 0, 90)
 					icon.Parent = container
-
-					local Infosound = Instance.new("Sound")
-					Infosound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
-					Infosound.Parent = container
-					Infosound:Play()
-
-					if Infosound.Ended then
-						Infosound:Destroy()
-					end
-
+		
 				elseif Alert_Type == "Success" then
-
+		
 					local icon = Instance.new("ImageLabel")
 					icon.Name = "AlertIcon"
 					icon.Image = GetAssetFunc('FinityGUI/assets/Success.png')
@@ -626,20 +634,11 @@ local suc, err = pcall(function()
 					icon.Position = UDim2.new(0, 7, 0, 14) -- the image is much bigger than others idk why
 					icon.Size = UDim2.new(0, 40, 0, 40)
 					icon.Parent = container
-
-					local Success_sound = Instance.new("Sound")
-					Success_sound.SoundId = GetAssetFunc("FinityGUI/assets/NotifSound_1.wav")
-					Success_sound.Parent = container
-					Success_sound:Play()
-
-					if Success_sound.Ended then
-						Success_sound:Destroy()
-					end
-
+		
 				end
-
+		
 				if Alert_Type == "Info" then
-
+		
 					local Title = Instance.new("TextLabel")
 					Title.Font = Enum.Font.Gotham
 					Title.TextSize = 13
@@ -652,18 +651,18 @@ local suc, err = pcall(function()
 					Title.TextYAlignment = Enum.TextYAlignment.Top
 					Title.Text = "<b>"..TopText.."</b>"
 					Title.Parent = container
-
+		
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.Gotham
 					Content.TextTransparency = 0
 					Content.RichText = true
-					Title.TextColor3 = theme.notification_info
+					Content.TextColor3 = theme.notification_info
 					Content.Text = "<b>"..BottomText.."</b>"
 					Content.Parent = container
-
+		
 				elseif Alert_Type == "Warning" then
-
+		
 					local Title = Instance.new("TextLabel")
 					Title.Font = Enum.Font.Gotham
 					Title.TextSize = 13
@@ -676,18 +675,18 @@ local suc, err = pcall(function()
 					Title.TextYAlignment = Enum.TextYAlignment.Top
 					Title.Text = "<b>"..TopText.."</b>"
 					Title.Parent = container
-
+		
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.Gotham
 					Content.TextTransparency = 0
 					Content.RichText = true
-					Title.TextColor3 = theme.notification_info
+					Content.TextColor3 = theme.notification_info
 					Content.Text = "<b>"..BottomText.."</b>"
 					Content.Parent = container
-
+		
 				elseif Alert_Type == "Success" then
-
+		
 					local Title = Instance.new("TextLabel")
 					Title.Font = Enum.Font.Gotham
 					Title.TextSize = 13
@@ -700,20 +699,20 @@ local suc, err = pcall(function()
 					Title.TextYAlignment = Enum.TextYAlignment.Top
 					Title.Text = "<b>"..TopText.."</b>"
 					Title.Parent = container
-
+		
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.Gotham
 					Content.TextTransparency = 0
 					Content.RichText = true
-					Title.TextColor3 = theme.notification_info
+					Content.TextColor3 = theme.notification_info
 					Content.Text = "<b>"..BottomText.."</b>"
 					Content.Parent = container
-
+		
 				end
-				-- forces the notification to close if its right/left clicked or middle mouse clicked
+		
 				container.InputBegan:Connect(function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.MouseButton2 or Enum.UserInputType.MouseButton3 then
+					if input.UserInputType == Enum.UserInputType.MouseButton1 then
 						task.spawn(function()
 							pcall(function()
 								finity.bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
@@ -725,7 +724,7 @@ local suc, err = pcall(function()
 						end)
 					end
 				end)
-
+		
 				task.spawn(function()
 					pcall(function()
 						finity.bettertween2(container, UDim2.new(1, -262, 1, -(150 + 80 * offset)), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 0.15, true)
@@ -739,6 +738,7 @@ local suc, err = pcall(function()
 				end)
 				return container
 			end
+		
 
 
 			function self2:Category(name)
@@ -935,9 +935,16 @@ local suc, err = pcall(function()
 							sector.container.Size = UDim2.new(1, 0, 0, sector.container["UIListLayout"].AbsoluteContentSize.Y)
 						end)
 					end)
+
 					uilistlayout.Parent = sector.container
 					uilistlayout = nil
 
+					--[[
+						kind - The kind of cheat you want to create
+						name - Name you gave to the cheat
+						callback - Data returend by the cheat
+						data - data and shit (You'll understand it more if you read the code)
+					]]
 					function sector:Cheat(kind, name, callback, data)
 						local cheat = {}
 						cheat.value = nil
@@ -974,7 +981,7 @@ local suc, err = pcall(function()
 						})
 
 						if kind then
-							if string.lower(kind) == "checkbox" or string.lower(kind) == "toggle" then
+							if string.lower(kind) == "checkbox" or string.lower(kind) == "toggle" or string.lower(kind) == "Checkbox" or string.lower(kind) == "Toggle" then
 								if data then
 									if data.enabled then
 										cheat.value = true
@@ -1021,6 +1028,8 @@ local suc, err = pcall(function()
 									SliceScale = 0.04
 								})
 
+								-- button toggle and hover shit
+
 								if data then
 									if data.enabled then
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
@@ -1032,6 +1041,7 @@ local suc, err = pcall(function()
 									local lightertheme = Color3.fromRGB((theme.checkbox_outer.R * 255) + 20, (theme.checkbox_outer.G * 255) + 20, (theme.checkbox_outer.B * 255) + 20)
 									finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = lightertheme}):Play()
 								end)
+
 								cheat.checkboxbutton.MouseLeave:Connect(function()
 									if not cheat.value then
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_outer}):Play()
@@ -1039,6 +1049,7 @@ local suc, err = pcall(function()
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
 									end
 								end)
+
 								cheat.checkboxbutton.MouseButton1Down:Connect(function()
 									if cheat.value then
 										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_outer}):Play()
@@ -1046,6 +1057,7 @@ local suc, err = pcall(function()
 										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
 									end
 								end)
+
 								cheat.checkboxbutton.MouseButton1Up:Connect(function()
 									cheat.value = not cheat.value
 
@@ -1067,7 +1079,7 @@ local suc, err = pcall(function()
 
 								cheat.checkboxbutton.Parent = cheat.outerbox
 								cheat.outerbox.Parent = cheat.container
-							elseif string.lower(kind) == "color" or string.lower(kind) == "colorpicker" then
+							elseif string.lower(kind) == "color" or string.lower(kind) == "colorpicker" or string.lower(kind) == "Color" or string.lower(kind) == "Colorpicker" or string.lower(kind) == "Colour" or string.lower(kind) == "Colourpicker" or string.lower(kind) == "colourpicker" or string.lower(kind) ==  "colour" then
 								cheat.value = Color3.new(1, 1, 1);
 
 								if data then
@@ -1102,6 +1114,9 @@ local suc, err = pcall(function()
 									Rotation = -90
 								})
 
+								-- Math and shit
+								-- Figure it out I ion gon explain dis fr
+
 								cheat.hsvbar.MouseButton1Down:Connect(function()
 									local rs = finity.gs["RunService"]
 									local uis = finity.gs["UserInputService"]local last = cheat.value;
@@ -1134,6 +1149,7 @@ local suc, err = pcall(function()
 										rs.RenderStepped:wait()
 									end
 								end)
+								
 								cheat.hsvbar.MouseButton2Down:Connect(function()
 									local rs = finity.gs["RunService"]
 									local uis = finity.gs["UserInputService"]
@@ -1189,7 +1205,7 @@ local suc, err = pcall(function()
 
 								cheat.hsvbar.Parent = cheat.container
 								cheat.arrowpreview.Parent = cheat.hsvbar
-							elseif string.lower(kind) == "dropdown" then
+							elseif string.lower(kind) == "dropdown" or string.lower(kind) == "Dropdown" then
 								if data then
 									if data.default then
 										cheat.value = data.default
@@ -1206,7 +1222,9 @@ local suc, err = pcall(function()
 									options = data.options
 								end
 
-								cheat.dropped = false
+								cheat.dropped = false -- if the button was pressed to display the elements (content)
+
+								-- what creates the drop down button
 
 								cheat.dropdown = finity:Create("ImageButton", {
 									Name = "Dropdown",
@@ -1247,24 +1265,31 @@ local suc, err = pcall(function()
 									BottomImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
 									MidImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
 									TopImage = GetAssetFunc("FinityGUI/assets/CheatList.png"),
-									ScrollBarThickness = 4,
+									ScrollBarThickness = theme.dropdown_scrollbar_thickness,
 									VerticalScrollBarInset = Enum.ScrollBarInset.None,
 									ScrollBarImageColor3 = theme.dropdown_scrollbar_color
 								})
+
+								-- creats the list layout element for the elements of the dropdown.
 
 								local uilistlayout = finity:Create("UIListLayout", {
 									SortOrder = Enum.SortOrder.LayoutOrder,
 									Padding = UDim.new(0, 2)
 								})
+								
 								uilistlayout.Parent = cheat.list
 								uilistlayout = nil
+								
 								local uipadding = finity:Create("UIPadding", {
 									PaddingLeft = UDim.new(0, 2)
 								})
+
 								uipadding.Parent = cheat.list
 								uipadding = nil
 
-								local function refreshOptions()
+								-- refreshes the options.
+
+								function cheat.dropdown.refreshOptions()
 									if cheat.dropped then
 										cheat.fadelist()
 									end
@@ -1342,6 +1367,8 @@ local suc, err = pcall(function()
 									end
 								end
 
+								-- hover effects
+
 								cheat.dropdown.MouseEnter:Connect(function()
 									finity.gs["TweenService"]:Create(cheat.selected, TweenInfo.new(0.1), {TextColor3 = theme.dropdown_text_hover}):Play()
 								end)
@@ -1352,7 +1379,7 @@ local suc, err = pcall(function()
 									cheat.fadelist()
 								end)
 
-								refreshOptions()
+								cheat.dropdown.refreshOptions()
 
 								function cheat:RemoveOption(value)
 									local removed = false
@@ -1365,7 +1392,7 @@ local suc, err = pcall(function()
 									end
 
 									if removed then
-										refreshOptions()
+										cheat.dropdown.refreshOptions()
 									end
 
 									return removed
@@ -1374,7 +1401,7 @@ local suc, err = pcall(function()
 								function cheat:AddOption(value)
 									table.insert(options, value)
 
-									refreshOptions()
+									cheat.dropdown.refreshOptions()
 								end
 
 								function cheat:SetValue(value)
@@ -1397,7 +1424,8 @@ local suc, err = pcall(function()
 								cheat.selected.Parent = cheat.dropdown
 								cheat.dropdown.Parent = cheat.container
 								cheat.list.Parent = cheat.container
-							elseif string.lower(kind) == "textbox" then
+
+							elseif string.lower(kind) == "textbox" or string.lower(kind) == "Textbox"then
 								local placeholdertext = data and data.placeholder
 
 								cheat.background = finity:Create("ImageLabel", {
@@ -1464,7 +1492,7 @@ local suc, err = pcall(function()
 
 								cheat.background.Parent = cheat.container
 								cheat.textbox.Parent = cheat.container
-							elseif string.lower(kind) == "slider" then
+							elseif string.lower(kind) == "slider" or "Slider" then
 								cheat.value = 0
 
 								local suffix = data.suffix or ""
@@ -1502,7 +1530,7 @@ local suc, err = pcall(function()
 									ZIndex = 2,
 									Font = Enum.Font.Gotham,
 									TextXAlignment = Enum.TextXAlignment.Left,
-									Text = "",
+									Text = minimum,
 									TextTransparency = 1,
 									TextColor3 = theme.slider_text,
 									TextSize = 13,
@@ -1520,6 +1548,8 @@ local suc, err = pcall(function()
 									SliceCenter = Rect.new(100, 100, 100, 100),
 									SliceScale = 0.02
 								})
+
+								-- slider math and shit
 
 								if data.default then
 									local size = math.clamp(data.default - cheat.sliderbar.AbsolutePosition.X, 0, 150)
@@ -1560,10 +1590,11 @@ local suc, err = pcall(function()
 									local percent = size / 150
 
 									cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+
 									if precise then
-										cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
+										cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
 									else
-										cheat.numbervalue.Text = tostring(cheat.value) .. suffix
+										cheat.numbervalue.Text = suffix .. tostring(cheat.value)
 									end
 
 									if callback then
@@ -1594,9 +1625,9 @@ local suc, err = pcall(function()
 
 										cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
 										if precise then
-											cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
+											cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
 										else
-											cheat.numbervalue.Text = tostring(cheat.value) .. suffix
+											cheat.numbervalue.Text = suffix .. tostring(cheat.value)
 										end
 
 										if callback then
@@ -1651,7 +1682,7 @@ local suc, err = pcall(function()
 								cheat.numbervalue.Parent = cheat.sliderbar
 								cheat.sliderbar.Parent = cheat.container
 
-							elseif string.lower(kind) == "button" then
+							elseif string.lower(kind) == "button" or string.lower(kind) == "Button" then
 								local button_text = name
 
 								cheat.background = finity:Create("ImageLabel", {
@@ -1716,7 +1747,7 @@ local suc, err = pcall(function()
 								cheat.background.Parent = cheat.container
 								cheat.button.Parent = cheat.container
 
-							elseif string.lower(kind) == "keybind" or string.lower(kind) == "bind" then
+							elseif string.lower(kind) == "keybind" or string.lower(kind) == "bind" or "Keybind" or "Bind" then
 								local callback_bind = data and data.bind
 								local connection
 								cheat.holding = false
@@ -1749,6 +1780,7 @@ local suc, err = pcall(function()
 									TextXAlignment = Enum.TextXAlignment.Center
 								})
 
+								-- hover stuff
 								cheat.button.MouseEnter:Connect(function()
 									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_hover}):Play()
 								end)
@@ -1761,9 +1793,11 @@ local suc, err = pcall(function()
 								cheat.button.MouseButton2Down:Connect(function()
 									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
 								end)
+
+								-- when the button is clicked we then want to start listening for a keycode input. IF we get a keycode we set it otherwise we throw an error
 								cheat.button.MouseButton1Up:Connect(function()
 									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-									cheat.button.Text = "Press key..."
+									cheat.button.Text = "Press Any key to bind"
 
 									if connection then
 										connection:Disconnect()
@@ -1780,7 +1814,7 @@ local suc, err = pcall(function()
 												connection = nil
 											end
 
-											delay(0, function()
+											task.delay(0, function()
 												callback_bind = Input.KeyCode
 												cheat.value = Input.KeyCode
 
@@ -1792,25 +1826,27 @@ local suc, err = pcall(function()
 													if not s then warn("error: ".. e) end
 												end
 											end)
+
+										-- here we remove the current keybind.
 										elseif Input.KeyCode == Enum.KeyCode.Backspace then
 											callback_bind = nil
 											cheat.button.Text = "Click to Bind"
 											cheat.value = nil
 											cheat.holding = false
-											delay(0, function()
+											task.delay(0, function()
 												if callback then
 													local s, e = pcall(function()
 														callback()
 													end)
 
-													if not s then warn("error: ".. e) end
+													if not s then error("error: ".. e, 5) end
 												end
 											end)
 
 											connection:Disconnect()
 											connection = nil
 										elseif Input.KeyCode == finityData.ToggleKey then
-											cheat.button.Text = "Invalid Key";
+											cheat.button.Text = "Cannot bind to Toggle Key: "..finityData.ToggleKey.Value;
 											cheat.value = nil
 										end
 									end)
@@ -1823,7 +1859,7 @@ local suc, err = pcall(function()
 									cheat.button.Text = "Click to Bind"
 									cheat.holding = false
 
-									delay(0, function()
+									task.delay(0, function()
 										if callback then
 											local s, e = pcall(function()
 												callback()
@@ -1890,7 +1926,7 @@ local suc, err = pcall(function()
 				return category
 			end
 
-			self:addShadow(self2.container, 0)
+			finity:addShadow(self2.container, 0)
 
 			self2.categories.ClipsDescendants = true
 
@@ -1898,7 +1934,7 @@ local suc, err = pcall(function()
 
 				self2.userinterface.Parent = self.gs["CoreGui"]
 			else
-				error("Could Not Parent the gui to CoreGui.", 5) -- At any point do we not want the Gui to move to script accessable instances like 'PlayerGui'.
+				error("Could not parent Finity to the CoreGui. This is fatal.", 5) -- At any point do we not want the Gui to move to script accessable instances like 'PlayerGui'.
 			end
 
 			self2.container.Parent = self2.userinterface
@@ -1907,24 +1943,20 @@ local suc, err = pcall(function()
 			self2.topbar.Parent = self2.container
 			self2.title.Parent = self2.topbar
 
-			if Title and not HideToolTip then -- if theres a title and we dont hide the tool tip
-				self2.title.Text = Title --.." | "..ToolTipText.." | "..Version
+			if Title and not HideToolTip and ToolTipText == "" or ToolTipText == " " or ToolTipText == nil then -- if theres a title and we dont hide the tool tip but we dont have any tool tip text
+				self2.title.Text = Title
 
-			elseif Title and HideToolTip then --
-				self2.title.Text = Title.." | "..Version
+			elseif Title and HideToolTip then -- if the tool tip is hidden and we have a title
+				self2.title.Text = Title
 
 			elseif not HideToolTip and ToolTipText and Title then
 				self2.title.Text = ToolTipText
 
-			elseif Title and HideToolTip then
-				self2.title.Text = Version
+			elseif not Title and HideToolTip then -- if we dont have a title and we hide the tool tip
+				self2.title.Text = "Place holder"
 
 			elseif not HideToolTip and ToolTipText and Title then -- if theres a title and we dont hide the tool tip and there is text for the tool tip
-				self2.title.Text = Title.." | "..ToolTipText.." | "..Version
-			end
-
-			function finity.settitle(text: string)
-				self2.title.Text = text
+				self2.title.Text = Title.." | "..ToolTipText -- This is a title | This is a tool tip text | This is some version
 			end
 
 			return self2, finityData
@@ -1957,7 +1989,7 @@ end)
 		end)
 	end
 
-	function finity.EnableDebugging(status: boolean)
+	function finity:EnableDebugging(status: boolean)
 		if status then
 			debug = true
 		else
