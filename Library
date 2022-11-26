@@ -156,7 +156,7 @@ if not isfolder('FinityGUI') then
 	DFAA()
 end
 
-function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
+function finity:DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
 	print("Downloading custom asset from: "..link)
 
 	if not IsCustomThemeFile then
