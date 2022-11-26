@@ -249,8 +249,10 @@ local suc, err = pcall(function()
 
 		function finity:RedownloadAssets()
 			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
+				finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy()
+				DFAA()
 				if debug then
-					warn("Finity already exists, Destorying old GUI to prevent any issues.")
+					warn("Reinstalling Assets, Please wait. Destroying Finity to prevent issues.")
 				end
                 finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy() -- lazy way of preventing dupelicates of the gui from appearing
 			end
