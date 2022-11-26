@@ -380,7 +380,7 @@ local suc, err = pcall(function()
 				end)
 			end
 
-			self2.ChangeBackgroundImage = function(ImageID, Transparency)
+			self2:ChangeBackgroundImage = function(ImageID, Transparency)
 				self2.container.Image = ImageID
 
 				if Transparency then
