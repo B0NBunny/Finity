@@ -199,7 +199,7 @@ setmetatable(finity.gs, {
 	end
 })
 
-function finity.ImportCustomThemes(Theme_Name)
+function finity:ImportCustomThemes(Theme_Name)
 	local CustomthemeScript = loadfile("FinityGUI/Customthemes.lua")()
 
 	local themes = CustomthemeScript.CustomThemes
