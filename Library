@@ -26,6 +26,7 @@ local Asset_Names = {
 	"DropDown.png",
 	"NotifSound.wav",
 	"HSVBar.png",
+	"lumienceimage.png"
 	"InfoNotification.png",
 	"NotificationBar.png",
 	"ScrollBar.png",
@@ -1089,7 +1090,7 @@ local suc, err = pcall(function()
 								end
 
 								local hsvimage = GetAssetFunc("FinityGUI/assets/HSVBar.png")
-								local lumienceimage = "rbxassetid://4613627894" -- cant get this from roblox preview as it wont actually like load?
+								local lumienceimage = GetAssetFunc("FinityGUI/assets/lumienceimage.png")
 
 								cheat.hsvbar = finity:Create("ImageButton", {
 									AnchorPoint = Vector2.new(0.5, 0.5),
