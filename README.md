@@ -26,7 +26,7 @@ The following applies to older and future version of this Library.
 
 # Finity
 Finity is a sleek GUI Library for roblox exploits to have a nice, Impressive and customisable GUI for their users.
-(This was originaly created by a user on [V3RMillion](https://v3rmillion.net/showthread.php?tid=922755) but they have since abondoned it)
+(This was originaly created by a user on [V3RMillion](https://v3rmillion.net/showthread.php?tid=922755).)
 
 ------
 
