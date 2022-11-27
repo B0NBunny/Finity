@@ -26,7 +26,7 @@ local Asset_Names = {
 	"DropDown.png",
 	"NotifSound.wav",
 	"HSVBar.png",
-	"lumienceimage.png"
+	"lumienceimage.png",
 	"InfoNotification.png",
 	"NotificationBar.png",
 	"ScrollBar.png",
@@ -318,7 +318,7 @@ local suc, err = pcall(function()
 
 			for theme_names, junk in pairs(finity.themes) do
 				if not CustomThemeName == theme_names then
-					error("Theme name: "..CustomThemeName.."\nDoesn't exist.", 5)
+					error("Theme name: "..CustomThemeName.."Doesn't exist.", 5)
 				end
 			end
 
