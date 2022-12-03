@@ -1,5 +1,7 @@
 --[[
 
+OUT DATED WILL NEED TO EDIT SLIGHTLY.
+
 Heres an exaple for the Finity Gui Lib :D
 For Mainly for islands.
 ]]
