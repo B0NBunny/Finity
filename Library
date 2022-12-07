@@ -156,7 +156,7 @@ if not isfolder('FinityGUI') then
 	DFAA()
 end
 
-function finity:DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
+function finity.DownloadCustomAsset(link: string, AssetName: string, IsCustomThemeFile: boolean)
 	print("Downloading custom asset from: "..link)
 
 	if not IsCustomThemeFile then
@@ -199,7 +199,7 @@ setmetatable(finity.gs, {
 	end
 })
 
-function finity:ImportCustomThemes(Theme_Name)
+function finity.ImportCustomThemes(Theme_Name)
 	local CustomthemeScript = loadfile("FinityGUI/Customthemes.lua")()
 
 	local themes = CustomthemeScript.CustomThemes
@@ -249,10 +249,8 @@ local suc, err = pcall(function()
 
 		function finity:RedownloadAssets()
 			if finity.gs["CoreGui"]:FindFirstChild("Finity") then
-				finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy()
-				DFAA()
 				if debug then
-					warn("Reinstalling Assets, Please wait. Destroying Finity to prevent issues.")
+					warn("Finity already exists, Destorying old GUI to prevent any issues.")
 				end
                 finity.gs["CoreGui"]:FindFirstChild("Finity"):Destroy() -- lazy way of preventing dupelicates of the gui from appearing
 			end
@@ -274,14 +272,15 @@ local suc, err = pcall(function()
 				Position = UDim2.new(0.5, 0, 0.5, 4),
 				Size = UDim2.new(1, 6, 1, 6),
 				Image = GetAssetFunc("FinityGUI/assets/WindowBlur.png"),
-				ImageTransparency = transparency and true or 0.5,
+				ImageTransparency = transparency or 0.5,
 				ImageColor3 = Color3.fromRGB(35, 35, 35),
 				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(10, 10, 118, 118)
+			    SliceCenter = Rect.new(10, 10, 118, 118),
+				Active = true,
 			})
-			
+
 			if transparency > 1 then
-				shadow.ImageTransparency = 0.5
+				transparency = 0.5
 			end
 
 			shadow.Parent = object
@@ -380,7 +379,7 @@ local suc, err = pcall(function()
 				end)
 			end
 
-			function self2:ChangeBackgroundImage(ImageID, Transparency)
+			function self2.ChangeBackgroundImage(ImageID, Transparency)
 				self2.container.Image = "rbxassetid://"..ImageID
 
 				if Transparency then
@@ -1091,7 +1090,7 @@ local suc, err = pcall(function()
 								end
 
 								local hsvimage = GetAssetFunc("FinityGUI/assets/HSVBar.png")
-								local lumienceimage = GetAssetFunc("FinityGUI/assets/lumienceimage.png")
+								local lumienceimage = "rbxassetid://4613627894" -- cant get this from roblox preview as it wont actually like load?
 
 								cheat.hsvbar = finity:Create("ImageButton", {
 									AnchorPoint = Vector2.new(0.5, 0.5),
@@ -1289,9 +1288,10 @@ local suc, err = pcall(function()
 								uipadding.Parent = cheat.list
 								uipadding = nil
 
+
 								-- refreshes the options.
 
-								function cheat.dropdown.refreshOptions()
+								function cheat.refreshOptions()
 									if cheat.dropped then
 										cheat.fadelist()
 									end
@@ -1381,7 +1381,7 @@ local suc, err = pcall(function()
 									cheat.fadelist()
 								end)
 
-								cheat.dropdown.refreshOptions()
+								cheat.refreshOptions()
 
 								function cheat:RemoveOption(value)
 									local removed = false
@@ -1394,7 +1394,7 @@ local suc, err = pcall(function()
 									end
 
 									if removed then
-										cheat.dropdown.refreshOptions()
+										cheat.refreshOptions()
 									end
 
 									return removed
@@ -1403,7 +1403,7 @@ local suc, err = pcall(function()
 								function cheat:AddOption(value)
 									table.insert(options, value)
 
-									cheat.dropdown.refreshOptions()
+									cheat.refreshOptions()
 								end
 
 								function cheat:SetValue(value)
@@ -1996,6 +1996,24 @@ end)
 			debug = true
 		else
 			debug = false
+		end
+	end
+
+	function finity:PlayLocalSound(SoundAsset: string)
+		local soundtoplay = GetAssetFunc(SoundAsset)
+
+		local SoundInstance = Instance.new('Sound')
+		SoundInstance.Parent = game.Workspace.CurrentCamera
+		SoundInstance.SoundId = GetAssetFunc(SoundAsset)
+
+		if SoundInstance.IsLoaded() then
+			SoundInstance.Play()
+		end
+
+		if SoundInstance.Ended() then
+			SoundInstance.Stop()
+			SoundInstance.SoundId = ""
+			SoundInstance.Stop() -- just incase.
 		end
 	end
 
