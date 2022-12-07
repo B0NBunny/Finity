@@ -1,6 +1,6 @@
 local Finity = loadstring(game:HttpGet("https://raw.githubusercontent.com/LocalSmail/Finity/main/Library"))()
 
-local FinityWindow = Finity.new("title", true, false, "", true, "")
+local FinityWindow = Finity.new("dropdown example", true, false, "", true, "")
 
 local PlayerSettingsCategory = FinityWindow:Category("Player") -- Makes a button on your left
 
