@@ -44,7 +44,7 @@ Custom_Finity_Theme.CustomThemes = {
 		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		NotifSound = "FinityGUI/assets/Enable.wav"
+		NotifSound = "FinityGUI/assets/NotifSound.wav"
 
 	} -- add your custom theme stuff inside here
 
