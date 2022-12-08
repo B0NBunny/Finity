@@ -1,5 +1,7 @@
 Custom_Finity_Theme = {}
 
+-- Please note that when you add your own themes, You will need to have the name given be EXACTLY as the theme name.
+
 Custom_Finity_Theme.CustomThemes = {
 
 	["Example"] = {
