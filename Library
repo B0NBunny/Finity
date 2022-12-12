@@ -24,7 +24,7 @@ local requestfunc = syn and syn.request or http and http.request or http_request
 	end
 end 
 
-local Version = "1.0.2.1"
+local Version = "1.0.2 (1)"
 
 local Discord = loadstring(requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body)()
 local debug = false -- Set to true to enable debugging.
