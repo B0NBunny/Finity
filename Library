@@ -396,6 +396,8 @@ local suc, err = pcall(function()
 			function self2:EnableThinProject(Enable)
 				if Enable then
 					thinProject = true
+				elseif not Enable then
+					thinProject = false
 				end
 			end
 
