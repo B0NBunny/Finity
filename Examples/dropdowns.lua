@@ -7,5 +7,5 @@ local PlayerSettingsCategory = FinityWindow:Category("Player") -- Makes a button
 local PlayerSettings = PlayerSettingsCategory:Sector("Player Configuration") -- Adds sections inside the category, Name Optional
 
 PlayerSettings:Cheat("dropdown", "Team Changer", function(team)
-    print(tream)
+    print(team)
 end, { options = {"Sheriff", "Civilian"}, default = "Sheriff" })
