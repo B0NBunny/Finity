@@ -383,7 +383,7 @@ local suc, err = pcall(function()
 
 			local thinProject = false
 
-			local toggled = false
+			local toggled = true
 			local typing = false
 			local firstCategory = true
 			local savedposition = UDim2.new(0.5, 0, 0.5, 0) -- default pos will probably add onto this later.
