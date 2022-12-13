@@ -16,5 +16,5 @@ local MaxPlayerZoom = PlayerSettings:Cheat("slider", "Max Player Zoom", function
 end, { default = 0, min = 0, max = 1500, suffix = " Max Zoom Distance "}) 
 -- Suffix is some text the user will see next to the value on the right side.
 -- default is the default value the user will see
--- min is the minimum value the scrollbar can be
--- max is the maximum value the scrollbar can be
+-- min is the minimum value the scrollbar and is an int value
+-- max is the maximum value the scrollbar and is an int value
