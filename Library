@@ -105,6 +105,7 @@ finity.themes = {
 		category_button_border = Color3.fromRGB(72, 71, 74),
 
 		checkbox_checked = Color3.fromRGB(132, 255, 130),
+		checkbox_checked_inner = Color3.fromRGB(141, 245, 139),
 		checkbox_outer = Color3.fromRGB(84, 81, 86),
 		checkbox_inner = Color3.fromRGB(132, 132, 136),
 
@@ -150,6 +151,7 @@ finity.themes = {
 		category_button_border = Color3.fromRGB(200, 196, 204),
 
 		checkbox_checked = Color3.fromRGB(114, 214, 112),
+		checkbox_checked_inner = Color3.fromRGB(119, 213, 118),
 		checkbox_outer = Color3.fromRGB(198, 189, 202),
 		checkbox_inner = Color3.fromRGB(249, 239, 255),
 
@@ -235,12 +237,12 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (2)"
+local Version = "1.0.2 (3)"
 
 local Discord = loadstring(requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body)()
 local debug = false -- Set to true to enable debugging.
 
-local theme = finity.themes.Dark -- defaults to dark
+local theme = finity.themes.Light -- defaults to dark
 
 -- Pretty much just sets the table to `game:GetService`
 setmetatable(finity.gs, {
@@ -311,15 +313,16 @@ local suc, err = pcall(function()
 
 			local shadow = self:Create('ImageLabel', {
 				Name = "Shadow",
-				AnchorPoint = Vector2.new(0.5, 0.5),
+				AnchorPoint = Vector2.new(0.51, 0.51),
 				BackgroundTransparency = 1,
 				Position = UDim2.new(0.5, 0, 0.5, 4),
 				Size = UDim2.new(1, 6, 1, 6),
 				Image = GetAssetFunc("FinityGUI/assets/WindowBlur.png"),
+				--Image = "rbxassetid://1316045217",
 				ImageTransparency = transparency or 0.5,
 				ImageColor3 = Color3.fromRGB(35, 35, 35),
 				ScaleType = Enum.ScaleType.Slice,
-			    SliceCenter = Rect.new(10, 10, 118, 118),
+			    SliceCenter = Rect.new(10, 10, 120, 120),
 				Active = true,
 			})
 
@@ -365,7 +368,7 @@ local suc, err = pcall(function()
 		function finity.new(Title, IsDark, CustomTheme, CustomThemeName, HideToolTip, ToolTipText)
 
 			if Title == "" or Title == " " or Title == nil then
-				Title = "Press '".. string.sub(tostring(self.ToggleKey), 14) .."' to hide this menu" -- defaults
+				Title = 'Press: '.. string.sub(tostring(finityData.ToggleKey), 14) ..' to hide the Gui.' -- defaults
 			end
 
 			for theme_names, junk in pairs(finity.themes) do
@@ -383,7 +386,7 @@ local suc, err = pcall(function()
 
 			local thinProject = false
 
-			local toggled = true
+			local toggled = false
 			local typing = false
 			local firstCategory = true
 			local savedposition = UDim2.new(0.5, 0, 0.5, 0) -- default pos will probably add onto this later.
@@ -1138,7 +1141,7 @@ local suc, err = pcall(function()
 								if data then
 									if data.enabled then
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
-										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
+										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox}):Play()
 									end
 								end
 
@@ -1148,18 +1151,18 @@ local suc, err = pcall(function()
 								end)
 
 								cheat.checkboxbutton.MouseLeave:Connect(function()
-									if not cheat.value then
+									if not cheat.value then -- if the checkbox is not enabled and hovered
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_outer}):Play()
-									else
+									else -- if it is enaled and hover
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
 									end
 								end)
 
 								cheat.checkboxbutton.MouseButton1Down:Connect(function()
-									if cheat.value then
+									if cheat.value then -- if the checkbox is enabled and hovered
 										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_outer}):Play()
-									else
-										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
+									else -- if not enabled and hovered
+										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked_inner}):Play()
 									end
 								end)
 
@@ -1176,7 +1179,7 @@ local suc, err = pcall(function()
 
 									if cheat.value then
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_checked}):Play()
-									else
+									else -- after being toggled off 
 										finity.gs["TweenService"]:Create(cheat.outerbox, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_outer}):Play()
 										finity.gs["TweenService"]:Create(cheat.checkboxbutton, TweenInfo.new(0.2), {ImageColor3 = theme.checkbox_inner}):Play()
 									end
@@ -1344,7 +1347,7 @@ local suc, err = pcall(function()
 									ImageTransparency = 0.5,
 									ScaleType = Enum.ScaleType.Slice,
 									SliceCenter = Rect.new(100, 100, 100, 100),
-									SliceScale = 0.02
+									SliceScale = 0.002
 								})
 
 								cheat.selected = finity:Create("TextLabel", {
@@ -1354,11 +1357,12 @@ local suc, err = pcall(function()
 									Position = UDim2.new(0, 10, 0, 0),
 									Size = UDim2.new(1, -35, 1, 0),
 									ZIndex = 3,
-									Font = Enum.Font.Gotham,
+									Font = Enum.Font.GothamSemibold,
 									Text = tostring(cheat.value),
 									TextColor3 = theme.dropdown_text,
 									TextSize = 13,
-									TextXAlignment = Enum.TextXAlignment.Left
+									TextXAlignment = Enum.TextXAlignment.Left,
+									Font = Enum.Font.GothamSemibold,
 								})
 
 								cheat.list = finity:Create("ScrollingFrame", {
@@ -1381,14 +1385,14 @@ local suc, err = pcall(function()
 
 								local uilistlayout = finity:Create("UIListLayout", {
 									SortOrder = Enum.SortOrder.LayoutOrder,
-									Padding = UDim.new(0, 2)
+									Padding = UDim.new(0, 2),
 								})
 
 								uilistlayout.Parent = cheat.list
 								uilistlayout = nil
 
 								local uipadding = finity:Create("UIPadding", {
-									PaddingLeft = UDim.new(0, 2)
+									PaddingLeft = UDim.new(0, 2),
 								})
 
 								uipadding.Parent = cheat.list
@@ -1421,10 +1425,10 @@ local suc, err = pcall(function()
 										button.Parent = cheat.list
 
 										button.MouseEnter:Connect(function()
-											finity.gs["TweenService"]:Create(button, TweenInfo.new(0.1), {TextColor3 = theme.dropdown_text_hover}):Play()
+											finity.gs["TweenService"]:Create(button, TweenInfo.new(0.5), {TextColor3 = theme.dropdown_text_hover}):Play()
 										end)
 										button.MouseLeave:Connect(function()
-											finity.gs["TweenService"]:Create(button, TweenInfo.new(0.1), {TextColor3 = theme.dropdown_text}):Play()
+											finity.gs["TweenService"]:Create(button, TweenInfo.new(0.5), {TextColor3 = theme.dropdown_text}):Play()
 										end)
 										button.MouseButton1Click:Connect(function()
 											if cheat.dropped then
@@ -1698,9 +1702,11 @@ local suc, err = pcall(function()
 									local percent = size / 150
 									local perc = default/maximum
 									cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+
 									finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
 										Size = UDim2.new(perc, 0, 1, 0),
 									}):Play()
+
 									if callback then
 										local s, e = pcall(function()
 											callback(cheat.value)
@@ -2054,7 +2060,7 @@ local suc, err = pcall(function()
 				return category
 			end
 
-			finity:addShadow(self2.container, 0)
+			finity:addShadow(self2.container, 0.5)
 
 			self2.categories.ClipsDescendants = true
 
