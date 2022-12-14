@@ -11,9 +11,9 @@ local finityObject = {}
 local self2 = finityObject
 local self = finity
 
-local getasset = getsynasset or getcustomasset -- stolen from: github.com/7GrandDadPGN/VapeV4ForRoblox tehe
+local getasset = getsynasset or getcustomasset or function(id) return "rbxasset://"..id end-- stolen from: github.com/7GrandDadPGN/VapeV4ForRoblox tehe
 
--- yes, I borrowed this from vapev4.
+-- yes, I 'borrowed' this from vapev4.
 local requestfunc = syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or request or function(data)
 	if data.Method == "GET" then
 		return {
@@ -24,6 +24,50 @@ local requestfunc = syn and syn.request or http and http.request or http_request
 	else
 		return {
 			Body = "Unable to access resource.",
+			Headers = {},
+			StatusCode = 404
+		}
+	end
+
+	if data.Method == "POST" then
+		return {
+			Body = game:HttpPost(data.Url, true),
+			Headers = {},
+			StatusCode = 200
+		}
+	else
+		return {
+			Body = "Unable to post data to resource",
+			Headers = {},
+			StatusCode = 404
+		}
+	end
+end 
+
+function finity:requestfunc(data)
+	if data.Method == "GET" then
+		return {
+			Body = game:HttpGet(data.Url, true),
+			Headers = {},
+			StatusCode = 200
+		}
+	else
+		return {
+			Body = "Unable to access resource.",
+			Headers = {},
+			StatusCode = 404
+		}
+	end
+
+	if data.Method == "POST" then
+		return {
+			Body = game:HttpPost(data.Url, true),
+			Headers = {},
+			StatusCode = 200
+		}
+	else
+		return {
+			Body = "Unable to post data to resource",
 			Headers = {},
 			StatusCode = 404
 		}
@@ -59,10 +103,7 @@ local DFAA = function()
 	makefolder('FinityGUI')
 	makefolder('FinityGUI/assets')
 	makefolder('FinityGUI/assets/custom') -- stores third part assets
-	writefile('FinityGUI/FinityDosAndDonts.txt', requestfunc(({
-		Url = "https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont.txt", 
-		Method = "GET"
-	})).Body)
+	writefile('FinityGUI/FinityDosAndDonts.txt', requestfunc(({ Url = "https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont.txt", Method = "GET" })).Body)
 
 	-- a template for the support that is to come
 
@@ -71,17 +112,11 @@ local DFAA = function()
 			print('CustomThemes file exists.')
 		end
 	elseif not isfile('FinityGUI/Customthemes.lua') then
-		writefile('FinityGUI/Customthemes.lua', requestfunc(({
-			Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua", 
-			Method = "GET"
-		})).Body)
+		writefile('FinityGUI/Customthemes.lua', requestfunc(({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua", Method = "GET" })).Body)
 	end
 
 	for i, v in Asset_Names do
-		writefile('FinityGUI/assets/'..v, requestfunc(({
-			Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v, 
-			Method = "GET"
-		})).Body)
+		writefile('FinityGUI/assets/'..v, requestfunc(({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v, Method = "GET" })).Body)
 	end
 
 end
@@ -188,30 +223,30 @@ finity.themes = {
 }
 
 ---- Downloads custom assets from the internet for use, although thid still needs to be worked on and is currently only fit for use with Custom themes
----- @param link string
----- @param AssetName string
----- @param IsCustomThemeFile boolean
+--- @param link string
+--- @param AssetName string
+--- @param IsCustomThemeFile boolean
 function finity:DownloadCustomAsset(link, AssetName, IsCustomThemeFile)
 	print("Downloading custom asset from: "..link)
 
 	if not IsCustomThemeFile then
-		writefile('FinityGUI/assets/custom/'..AssetName, game:HttpGet(link))
+		writefile('FinityGUI/assets/custom/'..AssetName, requestfunc(({ Url = link, Method = "GET" })).Body)
 
 	elseif IsCustomThemeFile and AssetName == nil or AssetName == "" or AssetName == " " or typeof(string) then
 		print("Downloading custom Customtheme.lua file")
-		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+		writefile('FinityGUI/Customthemes.lua', requestfunc(({ Url = link, Method = "GET" })).Body)
 
 		-- Same as the function above just checks if the AssetName has a value just incase a random shitty error gets thrown
 	elseif IsCustomThemeFile and not AssetName == nil or not AssetName == "" or not AssetName == " " then
 		print("Downloading custom Customtheme.lua file.")
 		warn("Tip: You dont have to put anything inside the AssetName argument, We parse the file name by default!")
-		writefile('FinityGUI/Customthemes.lua', game:HttpGet(link))
+		writefile('FinityGUI/Customthemes.lua', requestfunc(({ Url = link, Method = "GET" })).Body)
 
 	end
 end
 
----- Gets the asset parsed
----- @param path string
+--- Gets the asset parsed
+--- @param path string
 local GetAssetFunc = function(path)
 		--[[if not isfile(path) then -- Not working, needs fixing. On todo
 			print('Could not find specified asset. Re-downloading resources, If it is a custom asset from a third party then use the DownloadCustomAsset() function.')
@@ -230,6 +265,7 @@ function finity.ImportCustomThemes(Theme_Name)
 		finity.themes[Theme_Name] = Theme_Data
 	end
 
+	-- only reason why this is here for debugging is to see if your theme is being picked up. It should send an error but just incase for extra debugging purposes.
 	if debug then
 		for i, v in pairs(finity.themes) do
 			print(i, v)
@@ -237,10 +273,12 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (3)"
+local Version = "1.0.2 (4)"
 
-local Discord = loadstring(requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body)()
+local Discord = requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body
+
 local debug = false -- Set to true to enable debugging.
+
 
 local theme = finity.themes.Light -- defaults to dark
 
@@ -386,7 +424,7 @@ local suc, err = pcall(function()
 
 			local thinProject = false
 
-			local toggled = false
+			local toggled = true
 			local typing = false
 			local firstCategory = true
 			local savedposition = UDim2.new(0.5, 0, 0.5, 0) -- default pos will probably add onto this later.
@@ -441,7 +479,7 @@ local suc, err = pcall(function()
 			end
 
 			function self2:ChangeBackgroundImage(ImageID, Transparency)
-				self2.container.Image = ImageID
+				self2.container.Image = GetAssetFunc(ImageID)
 
 				if Transparency then
 					self2.container.ImageTransparency = Transparency
@@ -542,7 +580,6 @@ local suc, err = pcall(function()
 				ZIndex = 2,
 				Size = UDim2.new(1, -30, 0, 30),
 				Position = UDim2.new(0, 30, 0, 0),
-				--Text = 'Press','"'.. string.sub(tostring(self.ToggleKey), 14) ..'"','to hide this menu', -- defaults
 				Font = Enum.Font.GothamSemibold,
 				TextSize = 13,
 				TextXAlignment = Enum.TextXAlignment.Left,
@@ -550,6 +587,7 @@ local suc, err = pcall(function()
 				TextColor3 = theme.text_color,
 			})
 
+			---- Separators being setup
 			local separator = self:Create("Frame", {
 				Name = "Separator",
 				BackgroundColor3 = theme.separator_color,
@@ -571,7 +609,8 @@ local suc, err = pcall(function()
 			})
 			separator.Parent = self2.container
 			separator = nil
-
+			
+			---- Samething happening with the separators
 			local uipagelayout = self:Create("UIPageLayout", {
 				Padding = UDim.new(0, 10),
 				FillDirection = Enum.FillDirection.Vertical,
@@ -597,11 +636,11 @@ local suc, err = pcall(function()
 			uilistlayout = nil
 
 			--- Makes a toast notification that the user can view for errors, info or warnings.
-			---@param TopText string The Title for the toast
-			---@param BottomText string The Content for the toast
-			---@param Duration number How long it will last on the screen before exiting
-			---@param Alert_Type string The type of alert to send (Warning, Info, Success)
-			---@param CustomBackgroundIcon string The background image for the Notification bar
+			--- @param TopText string The Title for the toast
+			--- @param BottomText string The Content for the toast
+			--- @param Duration number How long it will last on the screen before exiting
+			--- @param Alert_Type string The type of alert to send (Warning, Info, Success)
+			--- @param CustomBackgroundIcon string The background image for the Notification bar
 			function self2:ToastMessage(TopText, BottomText, Duration, Alert_Type, CustomBackgroundIcon)
 
 				local notificationwindow = finity:Create("Frame", {
@@ -1049,10 +1088,10 @@ local suc, err = pcall(function()
 					]]
 
 					---- The magic that makes the cheats
-					----@param kind string
-					----@param name string
-					----@param callback string
-					----@param data table
+					---- @param kind string
+					---- @param name string
+					---- @param callback string
+					---- @param data table
 					function sector:Cheat(kind, name, callback, data)
 						local cheat = {}
 						cheat.value = nil
