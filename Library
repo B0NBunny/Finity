@@ -273,12 +273,12 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (4)"
+local Version = "1.0.2 (4.1)"
 
 local Discord = requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body
 
+local HubMode = false
 local debug = false -- Set to true to enable debugging.
-
 
 local theme = finity.themes.Light -- defaults to dark
 
@@ -294,24 +294,43 @@ setmetatable(finity.gs, {
 	end
 })
 
+function finity:EnableHubMode(Enable) 
+	if Enable == true then
+		HubMode = true
+	else 
+		HubMode = false
+	end
+
+	if not typeof(Enable) == "boolean" then
+		warn("Please parse a boolean value. (true/false)")
+		HubMode = false
+	end
+end
+
 
 local suc, err = pcall(function()
 
 	if game.Loaded then
 
-		print([[
+		task.delay(1.5, function()
 
-			 _____ ___ _   _ ___ _______   __
-			|  ___|_ _| \ | |_ _|_   _\ \ / /
-			| |_   | ||  \| || |  | |  \ V /
-			|  _|  | || |\  || |  | |   | |
-			|_|   |___|_| \_|___| |_|   |_|
+			if not HubMode then
+				print([[
 
-		]])
+					_____ ___ _   _ ___ _______   __
+					|  ___|_ _| \ | |_ _|_   _\ \ / /
+					| |_   | ||  \| || |  | |  \ V /
+					|  _|  | || |\  || |  | |   | |
+					|_|   |___|_| \_|___| |_|   |_|
 
-		print("You are using Finity version "..Version)
-		print("")
-		print("If you want Help, Found a Bug with the GUI, Have a suggestion or Just enjoy Finity, Join our Discord Community: "..Discord.." :D")
+				]])
+
+				print("You are using Finity version "..Version)
+				print("")
+				print("If you want Help, Found a Bug with the GUI, Have a suggestion or Just enjoy Finity, Join our Discord Community: "..Discord.." :D")
+
+			end
+		end)
 
 		local mouse = finity.gs["Players"].LocalPlayer:GetMouse()
 
