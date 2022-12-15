@@ -8,5 +8,4 @@ local PlayerSettings = PlayerSettingsCategory:Sector("Player Configuration") -- 
 
 PlayerSettings:Cheat("Checkbox", "Reset Wanted", function(Status)
     print(Status) -- will print true if enabled and false if disabled
-
 end)
