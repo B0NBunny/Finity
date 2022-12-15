@@ -273,7 +273,7 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (4.1)"
+local Version = "1.0.2 (4.2)"
 
 local Discord = requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body
 
@@ -469,6 +469,7 @@ local suc, err = pcall(function()
 			end
 
 			--- Sets the new keycode for the toggle of the gui
+			--- @param NewKey string
 			function self2:ChangeToggleKey(NewKey)
 				finityData.ToggleKey = "Enum.Keycode."..NewKey
 
@@ -1679,432 +1680,437 @@ local suc, err = pcall(function()
 								cheat.background.Parent = cheat.container
 								cheat.textbox.Parent = cheat.container
 
-							elseif string.lower(kind) == "slider" or "Slider" then
-								cheat.value = 0
-
-								local suffix = data.suffix or ""
-								local minimum = data.min or 0
-								local maximum = data.max or 1
-								local default = data.default
-								local precise = data.precise
-
-								local moveconnection
-								local releaseconnection
-
-								cheat.sliderbar = finity:Create("ImageButton", {
-									Name = "Sliderbar",
-									AnchorPoint = Vector2.new(1, 0.5),
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Position = UDim2.new(1, 0, 0.5, 0),
-									Size = UDim2.new(1, 0, 0, 6),
-									ZIndex = 2,
+							elseif string.lower(kind) == "slider" then
+                                cheat.value = 0
+        
+                                local suffix = data.suffix or ""
+                                local minimum = data.min or 0
+                                local maximum = data.max or 1
+                                local default = data.default
+                                local precise = data.precise
+                                
+                                local moveconnection
+                                local releaseconnection
+        
+                                cheat.sliderbar = finity:Create("ImageButton", {
+                                    Name = "Sliderbar",
+                                    AnchorPoint = Vector2.new(1, 0.5),
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Position = UDim2.new(1, 0, 0.5, 0),
+                                    Size = UDim2.new(1, 0, 0, 6),
+                                    ZIndex = 2,
 									Image = GetAssetFunc("FinityGUI/assets/CheatSliderbar.png"),
-									ImageColor3 = theme.slider_background,
-									ImageTransparency = 0.5,
-									ScaleType = Enum.ScaleType.Slice,
-									SliceCenter = Rect.new(100, 100, 100, 100),
-									SliceScale = 0.02,
-								})
-
-								cheat.numbervalue = finity:Create("TextLabel", {
-									Name = "Value",
-									AnchorPoint = Vector2.new(0, 0.5),
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Position = UDim2.new(0.5, 5, 0.5, 0),
-									Size = UDim2.new(1, 0, 0, 13),
-									ZIndex = 2,
-									Font = Enum.Font.Gotham,
-									TextXAlignment = Enum.TextXAlignment.Left,
-									Text = minimum,
-									TextTransparency = 1,
-									TextColor3 = theme.slider_text,
-									TextSize = 13,
-								})
-
-								cheat.visiframe = finity:Create("ImageLabel", {
-									Name = "Frame",
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Size = UDim2.new(0.5, 0, 1, 0),
-									ZIndex = 2,
+                                    ImageColor3 = theme.slider_background,
+                                    ImageTransparency = 0.5,
+                                    ScaleType = Enum.ScaleType.Slice,
+                                    SliceCenter = Rect.new(100, 100, 100, 100),
+                                    SliceScale = 0.02,
+                                })
+        
+                                cheat.numbervalue = finity:Create("TextLabel", {
+                                    Name = "Value",
+                                    AnchorPoint = Vector2.new(0, 0.5),
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Position = UDim2.new(0.5, 5, 0.5, 0),
+                                    Size = UDim2.new(1, 0, 0, 13),
+                                    ZIndex = 2,
+                                    Font = Enum.Font.Gotham,
+                                    TextXAlignment = Enum.TextXAlignment.Left,
+                                    Text = "",
+                                    TextTransparency = 1,
+                                    TextColor3 = theme.slider_text,
+                                    TextSize = 13,
+                                })
+        
+                                cheat.visiframe = finity:Create("ImageLabel", {
+                                    Name = "Frame",
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Size = UDim2.new(0.5, 0, 1, 0),
+                                    ZIndex = 2,
 									Image = GetAssetFunc("FinityGUI/assets/CheatVisiFrame.png"),
-									ImageColor3 = theme.slider_color,
-									ScaleType = Enum.ScaleType.Slice,
-									SliceCenter = Rect.new(100, 100, 100, 100),
-									SliceScale = 0.02
-								})
+                                    ImageColor3 = theme.slider_color,
+                                    ScaleType = Enum.ScaleType.Slice,
+                                    SliceCenter = Rect.new(100, 100, 100, 100),
+                                    SliceScale = 0.02
+                                })
+        
+                                if data.default then
+                                    local size = math.clamp(data.default - cheat.sliderbar.AbsolutePosition.X, 0, 150)
+                                    local percent = size / 150
+                                    local perc = default/maximum
+                                    cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+                                    finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
+                                        Size = UDim2.new(perc, 0, 1, 0),
+                                    }):Play()
+                                    if callback then
+                                        local s, e = pcall(function()
+                                            callback(cheat.value)
+                                        end)
+        
+                                        if not s then warn("error: ".. e) end
+                                    end
+                                end
+        
+                                function cheat:SetValue(value)
+                                    local size = math.clamp(value - cheat.sliderbar.AbsolutePosition.X, 0, 150)
+                                    local percent = size / 150
+                                    local perc = default/maximum
+                                    cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+                                    finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
+                                        Size = UDim2.new(perc, 0, 1, 0),
+                                    }):Play()
+                                    if callback then
+                                        local s, e = pcall(function()
+                                            callback(cheat.value)
+                                        end)
+        
+                                        if not s then warn("error: ".. e) end
+                                    end
+                                end
+        
+                                cheat.sliderbar.MouseButton1Down:Connect(function()
+                                    local size = math.clamp(mouse.X - cheat.sliderbar.AbsolutePosition.X, 0, 150)
+                                    local percent = size / 150
+        
+                                    cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+                                    if precise then
+                                        cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
+                                    else
+                                        cheat.numbervalue.Text = tostring(cheat.value) .. suffix
+                                    end
+        
+                                    if callback then
+                                        local s, e = pcall(function()
+                                            if data.precise then
+                                                callback(cheat.value)
+                                            else
+                                                callback(math.ceil(cheat.value))
+                                            end
+                                        end)
+        
+                                        if not s then warn("error: ".. e) end
+                                    end
+        
+                                    finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
+                                        Size = UDim2.new(size / 150, 0, 1, 0),
+                                        ImageColor3 = theme.slider_color_sliding
+                                    }):Play()
+        
+                                    finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
+                                        Position = UDim2.new(size / 150, 5, 0.5, 0),
+                                        TextTransparency = 0
+                                    }):Play()
+        
+                                    moveconnection = mouse.Move:Connect(function()
+                                        local size = math.clamp(mouse.X - cheat.sliderbar.AbsolutePosition.X, 0, 150)
+                                        local percent = size / 150
+        
+                                        cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
+                                        if precise then
+                                            cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
+                                        else
+                                            cheat.numbervalue.Text = tostring(cheat.value) .. suffix
+                                        end
+        
+                                        if callback then
+                                            local s, e = pcall(function()
+                                                if data.precise then
+                                                    callback(cheat.value)
+                                                else
+                                                    callback(math.ceil(cheat.value))
+                                                end
+                                            end)
+        
+                                            if not s then warn("error: ".. e) end
+                                        end
+        
+                                        finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
+                                            Size = UDim2.new(size / 150, 0, 1, 0),
+                                        ImageColor3 = theme.slider_color_sliding
+                                        }):Play()
+                                        
+                                        local Position = UDim2.new(size / 150, 5, 0.5, 0);
+        
+                                        if Position.Width.Scale >= 0.6 then
+                                            Position = UDim2.new(1, -cheat.numbervalue.TextBounds.X, 0.5, 10);
+                                        end
+        
+                                        finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
+                                            Position = Position,
+                                            TextTransparency = 0
+                                        }):Play()
+                                    end)
+        
+                                    releaseconnection = finity.gs["UserInputService"].InputEnded:Connect(function(Mouse)
+                                        if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
+        
+                                            finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
+                                                ImageColor3 = theme.slider_color
+                                            }):Play()
+        
+                                            finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
+                                                TextTransparency = 1
+                                            }):Play()
+        
+                                            moveconnection:Disconnect()
+                                            moveconnection = nil
+                                            releaseconnection:Disconnect()
+                                            releaseconnection = nil
+                                        end
+                                    end)
+                                end)
+        
+                                cheat.visiframe.Parent = cheat.sliderbar
+                                cheat.numbervalue.Parent = cheat.sliderbar
+                                cheat.sliderbar.Parent = cheat.container
+                            elseif string.lower(kind) == "button" then
+                                local button_text = data and data.text
+        
+                                cheat.background = finity:Create("ImageLabel", {
+                                    Name = "Background",
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Size = UDim2.new(1, 0, 1, 0),
+                                    ZIndex = 2,
+									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
+                                    ImageColor3 = theme.button_background,
+                                    ImageTransparency = 0.5,
+                                    ScaleType = Enum.ScaleType.Slice,
+                                    SliceCenter = Rect.new(100, 100, 100, 100),
+                                    SliceScale = 0.02
+                                })
+        
+                                cheat.button = finity:Create("TextButton", {
+                                    Name = "Button",
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Position = UDim2.new(0, 0, 0, 0),
+                                    Size = UDim2.new(1, 0, 1, 0),
+                                    ZIndex = 2,
+                                    Font = Enum.Font.Gotham,
+                                    Text = button_text or "Button",
+                                    TextColor3 = theme.textbox_text,
+                                    TextSize = 13,
+                                    TextXAlignment = Enum.TextXAlignment.Center
+                                })
+        
+                                cheat.button.MouseEnter:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_hover}):Play()
+                                end)
+                                cheat.button.MouseLeave:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
+                                end)
+                                cheat.button.MouseButton1Down:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
+                                end)
+                                cheat.button.MouseButton1Up:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
+                                    
+                                    if callback then
+                                        local s, e = pcall(function()
+                                            callback()
+                                        end)
+        
+                                        if not s then warn("error: ".. e) end
+                                    end
+                                end)
+                                
+                                function cheat:Fire()
+                                    if callback then
+                                        local s, e = pcall(function()
+                                            callback()
+                                        end)
+        
+                                        if not s then warn("error: ".. e) end
+                                    end
+                                end
+        
+                                cheat.background.Parent = cheat.container
+                                cheat.button.Parent = cheat.container
+                            
+                            elseif string.lower(kind) == "keybind" or string.lower(kind) == "bind" then
+								local callback_bind 
 
-								-- slider math and shit
-
-								if data.default then
-									local size = math.clamp(data.default - cheat.sliderbar.AbsolutePosition.X, 0, 150)
-									local percent = size / 150
-									local perc = default/maximum
-									cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
-									finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
-										Size = UDim2.new(perc, 0, 1, 0),
-									}):Play()
-									if callback then
-										local s, e = pcall(function()
-											callback(cheat.value)
-										end)
-
-										if not s then warn("error: ".. e) end
-									end
-								end
-
-								function cheat:SetValue(value)
-									local size = math.clamp(value - cheat.sliderbar.AbsolutePosition.X, 0, 150)
-									local percent = size / 150
-									local perc = default/maximum
-									cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
-
-									finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
-										Size = UDim2.new(perc, 0, 1, 0),
-									}):Play()
-
-									if callback then
-										local s, e = pcall(function()
-											callback(cheat.value)
-										end)
-
-										if not s then warn("error: ".. e) end
-									end
-								end
-
-								cheat.sliderbar.MouseButton1Down:Connect(function()
-									local size = math.clamp(mouse.X - cheat.sliderbar.AbsolutePosition.X, 0, 150)
-									local percent = size / 150
-
-									cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
-
-									if precise then
-										cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
+								if data then
+									if data.default == nil or data.default == "" then
+										data.default = nil
+										callback_bind = data and data.bind
 									else
-										cheat.numbervalue.Text = suffix .. tostring(cheat.value)
-									end
-
-									if callback then
-										local s, e = pcall(function()
-											if data.precise then
-												callback(cheat.value)
-											else
-												callback(math.ceil(cheat.value))
-											end
-										end)
-
-										if not s then warn("error: ".. e) end
-									end
-
-									finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
-										Size = UDim2.new(size / 150, 0, 1, 0),
-										ImageColor3 = theme.slider_color_sliding
-									}):Play()
-
-									finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
-										Position = UDim2.new(size / 150, 5, 0.5, 0),
-										TextTransparency = 0
-									}):Play()
-
-									moveconnection = mouse.Move:Connect(function()
-										local size = math.clamp(mouse.X - cheat.sliderbar.AbsolutePosition.X, 0, 150)
-										local percent = size / 150
-
-										cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
-										if precise then
-											cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
-										else
-											cheat.numbervalue.Text = suffix .. tostring(cheat.value)
-										end
-
-										if callback then
-											local s, e = pcall(function()
-												if data.precise then
-													callback(cheat.value)
-												else
-													callback(math.ceil(cheat.value))
-												end
-											end)
-
-											if not s then warn("error: ".. e) end
-										end
-
-										finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
-											Size = UDim2.new(size / 150, 0, 1, 0),
-											ImageColor3 = theme.slider_color_sliding
-										}):Play()
-
-										local Position = UDim2.new(size / 150, 5, 0.5, 0);
-
-										if Position.Width.Scale >= 0.6 then
-											Position = UDim2.new(1, -cheat.numbervalue.TextBounds.X, 0.5, 10);
-										end
-
-										finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
-											Position = Position,
-											TextTransparency = 0
-										}):Play()
-									end)
-
-									releaseconnection = finity.gs["UserInputService"].InputEnded:Connect(function(Mouse)
-										if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
-
-											finity.gs["TweenService"]:Create(cheat.visiframe, TweenInfo.new(0.1), {
-												ImageColor3 = theme.slider_color
-											}):Play()
-
-											finity.gs["TweenService"]:Create(cheat.numbervalue, TweenInfo.new(0.1), {
-												TextTransparency = 1
-											}):Play()
-
-											moveconnection:Disconnect()
-											moveconnection = nil
-											releaseconnection:Disconnect()
-											releaseconnection = nil
-										end
-									end)
-								end)
-
-								cheat.visiframe.Parent = cheat.sliderbar
-								cheat.numbervalue.Parent = cheat.sliderbar
-								cheat.sliderbar.Parent = cheat.container
-
-							elseif string.lower(kind) == "button" or string.lower(kind) == "Button" then
-								local button_text = name
-
-								cheat.background = finity:Create("ImageLabel", {
-									Name = "Background",
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Size = UDim2.new(1, 0, 1, 0),
-									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
-									ImageColor3 = theme.button_background,
-									ImageTransparency = 0.5,
-									ScaleType = Enum.ScaleType.Slice,
-									SliceCenter = Rect.new(100, 100, 100, 100),
-									SliceScale = 0.02
-								})
-
-								cheat.button = finity:Create("TextButton", {
-									Name = "Button",
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Position = UDim2.new(0, 0, 0, 0),
-									Size = UDim2.new(1, 0, 1, 0),
-									ZIndex = 2,
-									Font = Enum.Font.Gotham,
-									Text = button_text, --or "Button",
-									TextColor3 = theme.textbox_text,
-									TextSize = 13,
-									TextXAlignment = Enum.TextXAlignment.Center
-								})
-
-								cheat.button.MouseEnter:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_hover}):Play()
-								end)
-								cheat.button.MouseLeave:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-								end)
-								cheat.button.MouseButton1Down:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
-								end)
-								cheat.button.MouseButton1Up:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-
-									if callback then
-										local s, e = pcall(function()
-											callback()
-										end)
-
-										if not s then warn("error: ".. e) end
-									end
-								end)
-
-								---- runs the code that was given.
-								function cheat:Fire()
-									if callback then
-										local s, e = pcall(function()
-											callback()
-									end)
-
-										if not s then 
-											warn("error: ".. e)
-									    end
+										callback_bind = data and data.default
+										cheat.value = data and data.default
 									end
 								end
 
-								cheat.background.Parent = cheat.container
-								cheat.button.Parent = cheat.container
-
-							elseif string.lower(kind) == "keybind" or string.lower(kind) == "bind" or "Keybind" or "Bind" then
-								local callback_bind = data and data.bind
 								local connection
-								cheat.holding = false
-
-								cheat.background = finity:Create("ImageLabel", {
-									Name = "Background",
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Size = UDim2.new(1, 0, 1, 0),
-									ZIndex = 2,
-									Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
-									ImageColor3 = theme.button_background,
-									ImageTransparency = 0.5,
-									ScaleType = Enum.ScaleType.Slice,
-									SliceCenter = Rect.new(100, 100, 100, 100),
-									SliceScale = 0.02
-								})
-
-								cheat.button = finity:Create("TextButton", {
-									Name = "Button",
-									BackgroundColor3 = Color3.new(1, 1, 1),
-									BackgroundTransparency = 1,
-									Position = UDim2.new(0, 0, 0, 0),
-									Size = UDim2.new(1, 0, 1, 0),
-									ZIndex = 2,
-									Font = Enum.Font.Gotham,
-									Text = "Click to Bind",
-									TextColor3 = theme.textbox_text,
-									TextSize = 13,
-									TextXAlignment = Enum.TextXAlignment.Center
-								})
-
-								-- hover stuff
-								cheat.button.MouseEnter:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_hover}):Play()
-								end)
-								cheat.button.MouseLeave:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-								end)
-								cheat.button.MouseButton1Down:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
-								end)
-								cheat.button.MouseButton2Down:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
-								end)
-
-								-- when the button is clicked we then want to start listening for a keycode input. IF we get a keycode we set it otherwise we throw an error
-								cheat.button.MouseButton1Up:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-									cheat.button.Text = "Press Any key to bind"
-
-									if connection then
-										connection:Disconnect()
-										connection = nil
-									end
-									cheat.holding = false
-
-									connection = finity.gs["UserInputService"].InputBegan:Connect(function(Input)
-										if Input.UserInputType.Name == "Keyboard" and Input.KeyCode ~= finityData.ToggleKey and Input.KeyCode ~= Enum.KeyCode.Backspace then
-											cheat.button.Text = "Bound to " .. tostring(Input.KeyCode.Name)
-
-											if connection then
-												connection:Disconnect()
-												connection = nil
-											end
-
-											task.delay(0, function()
-												callback_bind = Input.KeyCode
-												cheat.value = Input.KeyCode
-
-												if callback then
-													local s, e = pcall(function()
-														callback(Input.KeyCode)
-													end)
-
-													if not s then warn("error: ".. e) end
-												end
-											end)
-
-										-- here we remove the current keybind.
-										elseif Input.KeyCode == Enum.KeyCode.Backspace then
-											callback_bind = nil
-											cheat.button.Text = "Click to Bind"
-											cheat.value = nil
-											cheat.holding = false
-											task.delay(0, function()
-												if callback then
-													local s, e = pcall(function()
-														callback()
-													end)
-
-													if not s then error("error: ".. e, 5) end
-												end
-											end)
-
-											connection:Disconnect()
-											connection = nil
-										elseif Input.KeyCode == finityData.ToggleKey then
-											cheat.button.Text = "Cannot bind to Toggle Key: "..finityData.ToggleKey.Value;
-											cheat.value = nil
+                                cheat.holding = false
+                                
+                                cheat.background = finity:Create("ImageLabel", {
+                                    Name = "Background",
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Size = UDim2.new(1, 0, 1, 0),
+                                    ZIndex = 2,
+                                    Image = GetAssetFunc("FinityGUI/assets/CheatBackground.png"),
+                                    ImageColor3 = theme.button_background,
+                                    ImageTransparency = 0.5,
+                                    ScaleType = Enum.ScaleType.Slice,
+                                    SliceCenter = Rect.new(100, 100, 100, 100),
+                                    SliceScale = 0.02
+                                })
+        
+                                cheat.button = finity:Create("TextButton", {
+                                    Name = "Button",
+                                    BackgroundColor3 = Color3.new(1, 1, 1),
+                                    BackgroundTransparency = 1,
+                                    Position = UDim2.new(0, 0, 0, 0),
+                                    Size = UDim2.new(1, 0, 1, 0),
+                                    ZIndex = 2,
+                                    Font = Enum.Font.Gotham,
+                                    Text = "Click to Bind",
+                                    TextColor3 = theme.textbox_text,
+                                    TextSize = 13,
+                                    TextXAlignment = Enum.TextXAlignment.Center
+                                })
+        
+                                cheat.button.MouseEnter:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_hover}):Play()
+                                end)
+                                cheat.button.MouseLeave:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
+                                end)
+                                cheat.button.MouseButton1Down:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
+                                end)
+                                cheat.button.MouseButton2Down:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
+                                end)
+                                cheat.button.MouseButton1Up:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
+                                    cheat.button.Text = "Press Any key"
+                                    
+                                    if connection then
+                                        connection:Disconnect()
+                                        connection = nil
+                                    end
+                                    cheat.holding = false
+        
+                                    connection = finity.gs["UserInputService"].InputBegan:Connect(function(Input)
+                                        if Input.UserInputType.Name == "Keyboard" and Input.KeyCode ~= finityData.ToggleKey and Input.KeyCode ~= Enum.KeyCode.Backspace then
+                                            cheat.button.Text = "Bound to: " .. tostring(Input.KeyCode.Name)
+                                            
+                                            if connection then
+                                                connection:Disconnect()
+                                                connection = nil
+                                            end
+                                            
+                                            task.delay(0, function()
+                                                callback_bind = Input.KeyCode
+                                                cheat.value = Input.KeyCode
+        
+                                                if callback then
+                                                    local s, e = pcall(function()
+                                                        callback(Input.KeyCode)
+                                                    end)
+                    
+                                                    if not s then warn("error: ".. e) end
+                                                end
+                                            end)
+                                        elseif Input.KeyCode == Enum.KeyCode.Backspace then
+                                            callback_bind = nil
+                                            cheat.button.Text = "Click to Bind"
+                                            cheat.value = nil
+                                            cheat.holding = false
+                                            task.delay(0, function()
+                                                if callback then
+                                                    local s, e = pcall(function()
+                                                        callback()
+                                                    end)
+                    
+                                                    if not s then warn("error: ".. e) end
+                                                end
+                                            end)
+        
+                                            connection:Disconnect()
+                                            connection = nil
+                                        elseif Input.KeyCode == finityData.ToggleKey then
+                                            cheat.button.Text = "Invalid Key";
+                                            cheat.value = nil
+                                        end
+                                    end)
+                                end)
+                                
+                                cheat.button.MouseButton2Up:Connect(function()
+                                    finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
+                                    cheat.value = nil
+                                    callback_bind = nil
+                                    cheat.button.Text = "Click to Bind"
+                                    cheat.holding = false
+        
+                                    task.delay(0, function()
+                                        if callback then
+                                            local s, e = pcall(function()
+                                                callback()
+                                            end)
+            
+                                            if not s then warn("error: ".. e) end
+                                        end
+                                    end)
+                                    
+                                    if connection then
+                                        connection:Disconnect()
+                                        connection = nil
+                                    end
+                                end)
+                                
+                                function cheat:SetValue(value)
+                                    cheat.value = tostring(value)
+                                    cheat.button.Text = "Bound to: " .. tostring(value)
+                                end
+                                
+                                finity.gs["UserInputService"].InputBegan:Connect(function(Input, Process)
+                                    if callback_bind and Input.KeyCode == callback_bind and not Process then
+                                        cheat.holding = true
+                                        if callback then
+                                            local s, e = pcall(function()
+                                                callback(Input.KeyCode)
+                                            end)
+            
+                                            if not s then warn("error: ".. e) end
+                                        end
+                                    end
+                                end)
+                                finity.gs["UserInputService"].InputBegan:Connect(function(Input, Process)
+                                    if callback_bind and Input.KeyCode == callback_bind and not Process then
+                                        cheat.holding = true
+                                    end
+                                end)
+                                
+                                if callback_bind and not callback_bind == data.default then
+                                    cheat.button.Text = "Bound to: " .. tostring(callback_bind.Name)
+								else
+									if data then
+										if callback_bind == data.default then
+											callback_bind = string.sub(tostring(data.default), 14)
+											cheat.value = data.default
+											cheat.button.Text = "Bound to: " .. tostring(callback_bind)
 										end
-									end)
-								end)
-
-								cheat.button.MouseButton2Up:Connect(function()
-									finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-									cheat.value = nil
-									callback_bind = nil
-									cheat.button.Text = "Click to Bind"
-									cheat.holding = false
-
-									task.delay(0, function()
-										if callback then
-											local s, e = pcall(function()
-												callback()
-											end)
-
-											if not s then warn("error: ".. e) end
-										end
-									end)
-
-									if connection then
-										connection:Disconnect()
-										connection = nil
 									end
-								end)
-
-								function cheat:SetValue(value)
-									cheat.value = tostring(value)
-									cheat.button.Text = "Bound to " .. tostring(value)
-								end
-
-								finity.gs["UserInputService"].InputBegan:Connect(function(Input, Process)
-									if callback_bind and Input.KeyCode == callback_bind and not Process then
-										cheat.holding = true
-										if callback then
-											local s, e = pcall(function()
-												callback(Input.KeyCode)
-											end)
-
-											if not s then warn("error: ".. e) end
-										end
-									end
-								end)
-								finity.gs["UserInputService"].InputBegan:Connect(function(Input, Process)
-									if callback_bind and Input.KeyCode == callback_bind and not Process then
-										cheat.holding = true
-									end
-								end)
-
-								if callback_bind then
-									cheat.button.Text = "Bound to " .. tostring(callback_bind.Name)
-								end
-
-								cheat.background.Parent = cheat.container
-								cheat.button.Parent = cheat.container
-							end
-						end
-
-						cheat.frame.Parent = sector.container
-						cheat.label.Parent = cheat.frame
-						cheat.container.Parent = cheat.frame
-
-						return cheat
-					end
+                                end
+        
+                                cheat.background.Parent = cheat.container
+                                cheat.button.Parent = cheat.container
+                            end
+                        end
+        
+                        cheat.frame.Parent = sector.container
+                        cheat.label.Parent = cheat.frame
+                        cheat.container.Parent = cheat.frame
+        
+                        return cheat
+                    end
 
 					sector.frame.Parent = category[calculateSector()]
 					sector.container.Parent = sector.frame
@@ -2117,8 +2123,6 @@ local suc, err = pcall(function()
 
 				return category
 			end
-
-			finity:addShadow(self2.container, 0.5)
 
 			self2.categories.ClipsDescendants = true
 
