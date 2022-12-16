@@ -1,3 +1,6 @@
+---- TODO figure out a way to make the binds not close gui
+---- TODO figure out a way to make the request func work with all different types of request apis
+
 local finity = {}
 finity.gs = {}
 
@@ -1729,7 +1732,7 @@ local suc, err = pcall(function()
 									end
 
 									if data.suffix == nil or data.suffix == "" then
-										suffix = "Value: " or name..": "
+										suffix = "Value: "
 									else
 										suffix = data.suffix
 									end
@@ -1823,9 +1826,9 @@ local suc, err = pcall(function()
         
                                     cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
                                     if precise then
-                                        cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
+                                        cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
                                     else
-                                        cheat.numbervalue.Text = tostring(cheat.value) .. suffix
+                                        cheat.numbervalue.Text = suffix .. tostring(cheat.value)
                                     end
         
                                     if callback then
@@ -1855,11 +1858,11 @@ local suc, err = pcall(function()
                                         local percent = size / 150
         
                                         cheat.value = math.floor((minimum + (maximum - minimum) * percent) * 100) / 100
-                                        if precise then
-                                            cheat.numbervalue.Text = math.ceil(tostring(cheat.value)) .. suffix
-                                        else
-                                            cheat.numbervalue.Text = tostring(cheat.value) .. suffix
-                                        end
+										if precise then
+											cheat.numbervalue.Text = suffix .. math.ceil(tostring(cheat.value))
+										else
+											cheat.numbervalue.Text = suffix .. tostring(cheat.value)
+										end
         
                                         if callback then
                                             local s, e = pcall(function()
