@@ -6,4 +6,14 @@ local PlayerSettingsCategory = FinityWindow:Category("Player") -- Makes a button
 
 local PlayerSettings = PlayerSettingsCategory:Sector("Player Configuration") -- Adds sections inside the category, Name Optional
 
-PlayerSettings:Cheat("Label", "Here you can configure your player settings. Choose form the many options below.")
+local label = PlayerSettings:Cheat("Label", "Here you can configure your player settings. Choose form the many options below.")
+
+-- You can set the labels text by doing the following:
+
+--[[
+
+local value_goes_here = "anything can be a value as long as it can become a string!"
+
+label:SetValue(value_goes_here)
+
+]]
