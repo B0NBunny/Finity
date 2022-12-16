@@ -5,6 +5,8 @@ finity.gs = {}
 local finityData = {
 	UpConnection = nil,
 	ToggleKey = Enum.KeyCode.Home,
+	CanToggle = true,
+	UsedKeybinds = {}
 }
 
 local finityObject = {}
@@ -44,6 +46,8 @@ local requestfunc = syn and syn.request or http and http.request or http_request
 	end
 end 
 
+---- Here so users can utilise the function
+--- @param data table
 function finity:requestfunc(data)
 	if data.Method == "GET" then
 		return {
@@ -273,12 +277,12 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (4.2)"
+local Version = "1.0.2 (4)"
 
 local Discord = requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body
 
 local HubMode = false
-local debug = false -- Set to true to enable debugging.
+local debug = false
 
 local theme = finity.themes.Light -- defaults to dark
 
@@ -477,9 +481,9 @@ local suc, err = pcall(function()
 					finityData.UpConnection:Disconnect()
 				end
 
-				---- sets the UpConnection variable to do some toggle stuff.
+				---- Sets the UpConnection variable to do some toggle stuff.
 				finityData.UpConnection = finity.gs["UserInputService"].InputEnded:Connect(function(Input)
-					if Input.KeyCode == finityData.ToggleKey and not typing then
+					if Input.KeyCode == finityData.ToggleKey and not typing and finityData.CanToggle then
 
 						toggled = not toggled -- sets to false.
 
@@ -515,7 +519,7 @@ local suc, err = pcall(function()
 
 			---- sets the UpConnection variable to do some toggle stuff.
 			finityData.UpConnection = finity.gs["UserInputService"].InputEnded:Connect(function(Input)
-				if Input.KeyCode == finityData.ToggleKey and not typing then
+				if Input.KeyCode == finityData.ToggleKey and not typing and finityData.CanToggle then
 					toggled = not toggled
 
 					if toggled then
@@ -639,6 +643,7 @@ local suc, err = pcall(function()
 				EasingDirection = Enum.EasingDirection.InOut,
 				SortOrder = Enum.SortOrder.LayoutOrder,
 			})
+
 			uipagelayout.Parent = self2.categories
 			uipagelayout = nil
 
@@ -646,12 +651,14 @@ local suc, err = pcall(function()
 				PaddingTop = UDim.new(0, 3),
 				PaddingLeft = UDim.new(0, 2)
 			})
+
 			uipadding.Parent = self2.sidebar
 			uipadding = nil
 
 			local uilistlayout = self:Create("UIListLayout", {
 				SortOrder = Enum.SortOrder.LayoutOrder
 			})
+
 			uilistlayout.Parent = self2.sidebar
 			uilistlayout = nil
 
@@ -796,7 +803,7 @@ local suc, err = pcall(function()
 				if Alert_Type == "Info" then
 
 					local Title = finity:Create("TextLabel", {
-						Font = Enum.Font.Gotham,
+						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
 						TextTransparency = 0,
@@ -811,17 +818,17 @@ local suc, err = pcall(function()
 
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
-					Content.Font = Enum.Font.Gotham
+					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
 					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
-					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Text = BottomText
 					Content.Parent = container
 
 				elseif Alert_Type == "Warning" then
 
 					local Title = finity:Create("TextLabel", {
-						Font = Enum.Font.Gotham,
+						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
 						TextTransparency = 0,
@@ -830,23 +837,23 @@ local suc, err = pcall(function()
 						Position = UDim2.new(0, 56, 0, 18),
 						TextXAlignment = Enum.TextXAlignment.Left,
 						TextYAlignment = Enum.TextYAlignment.Top,
-						Text = "<b>"..TopText.."</b>",
+						Text = TopText,
 						Parent = container
 					})
 
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
-					Content.Font = Enum.Font.Gotham
+					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
 					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
-					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Text = BottomText
 					Content.Parent = container
 
 				elseif Alert_Type == "Success" then
 
 					local Title = finity:Create("TextLabel", {
-						Font = Enum.Font.Gotham,
+						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
 						TextTransparency = 0,
@@ -855,17 +862,17 @@ local suc, err = pcall(function()
 						Position = UDim2.new(0, 56, 0, 18),
 						TextXAlignment = Enum.TextXAlignment.Left,
 						TextYAlignment = Enum.TextYAlignment.Top,
-						Text = "<b>"..TopText.."</b>",
+						Text = TopText,
 						Parent = container
 					})
 
 					local Content = Title:Clone()
 					Content.Position = UDim2.new(0, 56, 0, 44)
-					Content.Font = Enum.Font.Gotham
+					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
 					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
-					Content.Text = "<b>"..BottomText.."</b>"
+					Content.Text = BottomText
 					Content.Parent = container
 
 				end
@@ -1107,11 +1114,11 @@ local suc, err = pcall(function()
 						data - data and shit (You'll understand it more if you read the code)
 					]]
 
-					---- The magic that makes the cheats
-					---- @param kind string
-					---- @param name string
-					---- @param callback string
-					---- @param data table
+					--- The magic that makes the cheats
+					--- @param kind string
+					--- @param name string
+					--- @param callback string
+					--- @param data table
 					function sector:Cheat(kind, name, callback, data)
 						local cheat = {}
 						cheat.value = nil
@@ -1399,6 +1406,8 @@ local suc, err = pcall(function()
 									Name = "Dropdown",
 									BackgroundColor3 = Color3.new(1, 1, 1),
 									BackgroundTransparency = 1,
+									BorderSizePixel = 5,
+									BorderColor3 = theme.category_button_border,
 									Size = UDim2.new(1, 0, 1, 0),
 									ZIndex = 2,
 									Image = GetAssetFunc("FinityGUI/assets/DropDown.png"),
@@ -1421,7 +1430,6 @@ local suc, err = pcall(function()
 									TextColor3 = theme.dropdown_text,
 									TextSize = 13,
 									TextXAlignment = Enum.TextXAlignment.Left,
-									Font = Enum.Font.GothamSemibold,
 								})
 
 								cheat.list = finity:Create("ScrollingFrame", {
@@ -1513,7 +1521,7 @@ local suc, err = pcall(function()
 									finity.gs["TweenService"]:Create(cheat.list, TweenInfo.new(0), {Size = UDim2.new(1, 0, 0, 0), Position = UDim2.new(0, 0, 1, 0), CanvasSize = UDim2.new(0, 0, 0, cheat.list["UIListLayout"].AbsoluteContentSize.Y), ScrollBarImageTransparency = 1, BackgroundTransparency = 1}):Play()
 								end
 
-								---- Hides the dropdown list if it is showing.
+								-- Hides the dropdown list if it is showing.
 								function cheat.fadelist()
 									cheat.dropped = not cheat.dropped
 
@@ -1550,8 +1558,8 @@ local suc, err = pcall(function()
 
 								cheat.refreshOptions()
 
-								---- Removes an dropdown option to the list
-								----@param value string
+								--- Removes an dropdown option to the list
+								--- @param value string
 								function cheat:RemoveOption(value)
 									local removed = false
 
@@ -1569,15 +1577,21 @@ local suc, err = pcall(function()
 										end
 									end
 
+									-- refreshes the options if it removes successfully
 									if removed then
-										cheat.refreshOptions()
+										if cheat.dropped then
+											cheat.fadelist()
+											cheat.refreshOptions()
+										else
+											cheat.refreshOptions()
+										end
 									end
 
 									return removed
 								end
 
-								---- Adds an dropdown option to the list
-								----@param value string
+								--- Adds an dropdown option to the list
+								--- @param value string
 								function cheat:AddOption(value)
 
 									if not table.find(options, value) then
@@ -1588,7 +1602,12 @@ local suc, err = pcall(function()
 										warn(value.." is already inside the selectable items.")
 									end
 
-									cheat.refreshOptions()
+									if cheat.dropped then
+										cheat.fadelist()
+										cheat.refreshOptions()
+									else
+										cheat.refreshOptions()
+									end
 								end
 
 								function cheat:SetValue(value)
@@ -1672,6 +1691,7 @@ local suc, err = pcall(function()
 										if not s then warn("error: "..e) end
 									end
 								end)
+
 								function cheat:SetValue(value)
 									cheat.value = tostring(value)
 									cheat.textbox.Text = tostring(value)
@@ -1688,6 +1708,32 @@ local suc, err = pcall(function()
                                 local maximum = data.max or 1
                                 local default = data.default
                                 local precise = data.precise
+
+								if data then
+									if data.default == nil or data.default == "" then
+										data.default = nil
+									else
+										default = data.default
+									end
+
+									if data.min == nil or data.min == "" then
+										minimum = 0
+									else
+										minimum = data.min
+									end
+
+									if data.max == nil or data.max == "" then
+										maximum = 0
+									else
+										maximum = data.max
+									end
+
+									if data.suffix == nil or data.suffix == "" then
+										suffix = "Value: " or name..": "
+									else
+										suffix = data.suffix
+									end
+								end
                                 
                                 local moveconnection
                                 local releaseconnection
@@ -1866,6 +1912,7 @@ local suc, err = pcall(function()
                                 cheat.visiframe.Parent = cheat.sliderbar
                                 cheat.numbervalue.Parent = cheat.sliderbar
                                 cheat.sliderbar.Parent = cheat.container
+
                             elseif string.lower(kind) == "button" then
                                 local button_text = data and data.text
         
@@ -1933,6 +1980,7 @@ local suc, err = pcall(function()
                             
                             elseif string.lower(kind) == "keybind" or string.lower(kind) == "bind" then
 								local callback_bind 
+								local oldkey = cheat.bind
 
 								if data then
 									if data.default == nil or data.default == "" then
@@ -1941,6 +1989,9 @@ local suc, err = pcall(function()
 									else
 										callback_bind = data and data.default
 										cheat.value = data and data.default
+										oldkey = data and data.default
+
+										table.insert(finityData.UsedKeybinds, string.sub(tostring(data.default), 14))
 									end
 								end
 
@@ -1969,7 +2020,7 @@ local suc, err = pcall(function()
                                     Size = UDim2.new(1, 0, 1, 0),
                                     ZIndex = 2,
                                     Font = Enum.Font.Gotham,
-                                    Text = "Click to Bind",
+                                    Text = "No Key Binded.",
                                     TextColor3 = theme.textbox_text,
                                     TextSize = 13,
                                     TextXAlignment = Enum.TextXAlignment.Center
@@ -1982,12 +2033,17 @@ local suc, err = pcall(function()
                                     finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
                                 end)
                                 cheat.button.MouseButton1Down:Connect(function()
+									finityData.CanToggle = false
                                     finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
                                 end)
                                 cheat.button.MouseButton2Down:Connect(function()
                                     finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background_down}):Play()
                                 end)
                                 cheat.button.MouseButton1Up:Connect(function()
+									if finityData.CanToggle then
+										finityData.CanToggle = not finityData.CanToggle
+									end
+
                                     finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
                                     cheat.button.Text = "Press Any key"
                                     
@@ -1996,57 +2052,147 @@ local suc, err = pcall(function()
                                         connection = nil
                                     end
                                     cheat.holding = false
+
+									--- Prevents unused keybinds from being known as used
+
+									if table.find(finityData.UsedKeybinds, oldkey) then
+										local t = table.find(finityData.UsedKeybinds, tostring(oldkey))
+										table.remove(finityData.UsedKeybinds, t)
+									end
+									--- Sets the keybind and removes
         
                                     connection = finity.gs["UserInputService"].InputBegan:Connect(function(Input)
-                                        if Input.UserInputType.Name == "Keyboard" and Input.KeyCode ~= finityData.ToggleKey and Input.KeyCode ~= Enum.KeyCode.Backspace then
-                                            cheat.button.Text = "Bound to: " .. tostring(Input.KeyCode.Name)
-                                            
-                                            if connection then
-                                                connection:Disconnect()
-                                                connection = nil
-                                            end
-                                            
-                                            task.delay(0, function()
-                                                callback_bind = Input.KeyCode
-                                                cheat.value = Input.KeyCode
-        
-                                                if callback then
-                                                    local s, e = pcall(function()
-                                                        callback(Input.KeyCode)
-                                                    end)
-                    
-                                                    if not s then warn("error: ".. e) end
-                                                end
-                                            end)
-                                        elseif Input.KeyCode == Enum.KeyCode.Backspace then
-                                            callback_bind = nil
-                                            cheat.button.Text = "Click to Bind"
-                                            cheat.value = nil
-                                            cheat.holding = false
-                                            task.delay(0, function()
-                                                if callback then
-                                                    local s, e = pcall(function()
-                                                        callback()
-                                                    end)
-                    
-                                                    if not s then warn("error: ".. e) end
-                                                end
-                                            end)
-        
-                                            connection:Disconnect()
-                                            connection = nil
-                                        elseif Input.KeyCode == finityData.ToggleKey then
-                                            cheat.button.Text = "Invalid Key";
-                                            cheat.value = nil
-                                        end
-                                    end)
+											if Input.UserInputType.Name == "Keyboard" and Input.KeyCode ~= finityData.ToggleKey and Input.KeyCode ~= Enum.KeyCode.Backspace and not table.find(finityData.UsedKeybinds, Input.KeyCode.Name) then
+
+												oldkey = Input.KeyCode.Name
+
+												if table.find(finityData.UsedKeybinds, string.sub(tostring(Input.KeyCode.Name), 14)) then
+													local t = table.find(finityData.UsedKeybinds, string.sub(tostring(Input.KeyCode.Name), 14))
+													table.remove(finityData.UsedKeybinds, t)
+												end
+
+												cheat.button.Text = "Bound to: " .. tostring(Input.KeyCode.Name)
+												finityData.CanToggle = true
+
+												if not table.find(finityData.UsedKeybinds, Input.KeyCode.Name) then
+													table.insert(finityData.UsedKeybinds, tostring(Input.KeyCode.Name))
+												end
+												
+												if connection then
+													connection:Disconnect()
+													connection = nil
+												end
+												
+												task.delay(0, function()
+													callback_bind = Input.KeyCode
+													cheat.value = Input.KeyCode
+
+													if callback then
+														local s, e = pcall(function()
+															callback(Input.KeyCode)
+														end)
+						
+														if not s then warn("error: ".. e) end
+													end
+												end)
+
+											elseif Input.KeyCode == Enum.KeyCode.Backspace then
+												callback_bind = nil
+												oldkey = nil
+												cheat.button.Text = "No Key Binded."
+												cheat.value = nil
+												cheat.holding = false
+
+												if table.find(finityData.UsedKeybinds, string.sub(tostring(Input.KeyCode), 14)) then
+													table.remove(finityData.UsedKeybinds[string.sub(tostring(Input.KeyCode), 14)])
+												end
+
+												task.delay(0, function()
+													if callback then
+														local s, e = pcall(function()
+															callback()
+														end)
+						
+														if not s then warn("error: ".. e) end
+													end
+												end)
+												connection:Disconnect()
+												connection = nil
+
+											elseif table.find(finityData.UsedKeybinds, Input.KeyCode.Name) then
+												cheat.button.Text = "Key Already Binded."
+												callback_bind = nil
+												oldkey = nil
+												cheat.value = nil
+												cheat.holding = false
+												task.delay(0, function()
+													if callback then
+														local s, e = pcall(function()
+															callback()
+														end)
+						
+														if not s then warn("error: ".. e) end
+													end
+												end)
+
+											
+											elseif Input.KeyCode == finityData.ToggleKey then
+												finityData.CanToggle = false
+												cheat.button.Text = "Invalid Key";
+												cheat.value = nil
+												oldkey = nil
+												callback_bind = nil
+												cheat.bind = nil
+												cheat.holding = false
+
+												if connection then
+													connection:Disconnect()
+													connection = nil
+												end
+
+												task.delay(0, function()
+													if callback then
+														local s, e = pcall(function()
+															callback()
+														end)
+						
+														if not s then warn("error: ".. e) end
+													end
+												end)
+
+												task.delay(3, function()
+													cheat.button.Text = "No Key Binded."
+													finityData.CanToggle = true
+												end)
+											end
+									end)
                                 end)
                                 
                                 cheat.button.MouseButton2Up:Connect(function()
+
+									if not finityData.CanToggle then
+										finityData.CanToggle = true
+									end
+
                                     finity.gs["TweenService"]:Create(cheat.background, TweenInfo.new(0.2), {ImageColor3 = theme.button_background}):Play()
-                                    cheat.value = nil
+
+									---- finds the keybind then removes it
+									if table.find(finityData.UsedKeybinds, string.sub(tostring(cheat.value), 14)) then
+										print("found: "..table.find(finityData.UsedKeybinds, string.sub(tostring(cheat.value), 14)))
+										local t = table.find(finityData.UsedKeybinds, string.sub(tostring(cheat.value), 14))
+
+										print("Removed key in pos: "..table.find(finityData.UsedKeybinds, string.sub(tostring(cheat.value), 14)))
+
+										table.remove(finityData.UsedKeybinds, t)
+										if not table.find(finityData.UsedKeybinds, string.sub(tostring(cheat.value), 14)) then
+											print("Removed keybind: ", cheat.value)
+										end
+									end
+
+									oldkey = nil
+									cheat.value = nil
                                     callback_bind = nil
-                                    cheat.button.Text = "Click to Bind"
+                                    cheat.button.Text = "No Key Binded."
                                     cheat.holding = false
         
                                     task.delay(0, function()
@@ -2095,6 +2241,7 @@ local suc, err = pcall(function()
 										if callback_bind == data.default then
 											callback_bind = string.sub(tostring(data.default), 14)
 											cheat.value = data.default
+											oldkey = data.default
 											cheat.button.Text = "Bound to: " .. tostring(callback_bind)
 										end
 									end
@@ -2146,13 +2293,10 @@ local suc, err = pcall(function()
 				self2.title.Text = Title
 
 			elseif not HideToolTip and ToolTipText and Title then
-				self2.title.Text = ToolTipText
+				self2.title.Text = Title.." | "..ToolTipText -- This is a title | This is a tool tip text | This is some version
 
 			elseif not Title and HideToolTip then -- if we dont have a title and we hide the tool tip
 				self2.title.Text = "Place holder"
-
-			elseif not HideToolTip and ToolTipText and Title then -- if theres a title and we dont hide the tool tip and there is text for the tool tip
-				self2.title.Text = Title.." | "..ToolTipText -- This is a title | This is a tool tip text | This is some version
 			end
 
 			return self2, finityData
