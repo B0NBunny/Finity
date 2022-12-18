@@ -1,6 +1,3 @@
----- TODO figure out a way to make the binds not close gui
----- TODO figure out a way to make the request func work with all different types of request apis
-
 local finity = {}
 finity.gs = {}
 
@@ -280,7 +277,7 @@ function finity.ImportCustomThemes(Theme_Name)
 	end
 end
 
-local Version = "1.0.2 (5)"
+local Version = "1.0.2 (4)"
 
 local Discord = requestfunc({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/discord", Method = "GET"}).Body
 
@@ -747,20 +744,19 @@ local suc, err = pcall(function()
 				})
 
 				local frame2 = finity:Create("ImageLabel", {
-				BackgroundColor3 = theme.main_container,
-				Name = "Timer",
-				BackgroundTransparency = 0,
-				SliceCenter = Rect.new(2, 0, 224, 2),
-				Size = UDim2.new(1, 0, 0, 2),
-				ScaleType = Enum.ScaleType.Slice,
-				Position = UDim2.new(0, 3, 1, -3),
-				ZIndex = 2,
-				Active = true,
-				Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png"),
-				BorderSizePixel = 0,
-				Parent = container
-
-			})
+					BackgroundColor3 = theme.main_container,
+					Name = "Timer",
+					BackgroundTransparency = 0,
+					SliceCenter = Rect.new(2, 0, 224, 2),
+					Size = UDim2.new(1, 0, 0, 2),
+					ScaleType = Enum.ScaleType.Slice,
+					Position = UDim2.new(0, 3, 1, -3),
+					ZIndex = 2,
+					Active = true,
+					Image = GetAssetFunc("FinityGUI/assets/NotificationBar.png"),
+					BorderSizePixel = 0,
+					Parent = container
+				})
 
 				--[[frame2:GetPropertyChangedSignal("BackgroundColor3"):Connect(function()
 					frame2.ImageColor3 = frame2.BackgroundColor3
@@ -809,6 +805,8 @@ local suc, err = pcall(function()
 						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
+						TextWrapped = true,
+						TextScaled = true,
 						TextTransparency = 0,
 						TextColor3 = theme.notification_info,
 						BackgroundTransparency = 1,
@@ -823,7 +821,6 @@ local suc, err = pcall(function()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
-					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
 					Content.Text = BottomText
 					Content.Parent = container
@@ -834,6 +831,8 @@ local suc, err = pcall(function()
 						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
+						TextWrapped = true,
+						TextScaled = true,
 						TextTransparency = 0,
 						TextColor3 = theme.notification_warn,
 						BackgroundTransparency = 1,
@@ -848,7 +847,6 @@ local suc, err = pcall(function()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
-					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
 					Content.Text = BottomText
 					Content.Parent = container
@@ -859,6 +857,8 @@ local suc, err = pcall(function()
 						Font = Enum.Font.GothamSemibold,
 						TextSize = 13,
 						RichText = true,
+						TextWrapped = true,
+						TextScaled = true,
 						TextTransparency = 0,
 						TextColor3 = theme.notification_success,
 						BackgroundTransparency = 1,
@@ -873,7 +873,6 @@ local suc, err = pcall(function()
 					Content.Position = UDim2.new(0, 56, 0, 44)
 					Content.Font = Enum.Font.GothamSemibold
 					Content.TextTransparency = 0
-					Content.RichText = true
 					Content.TextColor3 = theme.notification_info
 					Content.Text = BottomText
 					Content.Parent = container
@@ -1134,6 +1133,7 @@ local suc, err = pcall(function()
 							ZIndex = 2,
 						})
 
+						-- for some reason this is used for the label cheat.
 						cheat.label = finity:Create("TextLabel", {
 							Name = "Title",
 							BackgroundColor3 = Color3.new(1, 1, 1),
@@ -1143,7 +1143,9 @@ local suc, err = pcall(function()
 							Font = Enum.Font.Gotham,
 							TextColor3 = theme.text_color,
 							TextSize = 13,
-							Text = name,
+							RichText = true,
+							TextWrapped = true,
+							TextScaled = true,
 							TextXAlignment = Enum.TextXAlignment.Left
 						})
 
@@ -1158,12 +1160,32 @@ local suc, err = pcall(function()
 						})
 
 						if kind then
-							if string.lower(kind) == "checkbox" or string.lower(kind) == "toggle" or string.lower(kind) == "Checkbox" or string.lower(kind) == "Toggle" then
+
+							if string.lower(kind) == "label" then
+								cheat.label.Text = name
+
+								function cheat:SetValue(value)
+									cheat.label.Text = tostring(value)
+									if debug then
+										print("Set label text to: "..value)
+									end
+								end
+
+								if callback then
+									task.spawn(function()
+										print("You do not need a callback for text labels. Remove this.")
+									end)
+								end
+
+							elseif string.lower(kind) == "checkbox" or string.lower(kind) == "toggle" or string.lower(kind) == "Checkbox" or string.lower(kind) == "Toggle" then
 								if data then
 									if data.enabled then
 										cheat.value = true
 									end
 								end
+
+								-- reason why we do this is to prevent the labels from being made.
+								cheat.label.Text = name
 
 								cheat.checkbox = finity:Create("Frame", {
 									Name = "Checkbox",
@@ -1258,6 +1280,8 @@ local suc, err = pcall(function()
 								cheat.outerbox.Parent = cheat.container
 
 							elseif string.lower(kind) == "color" or string.lower(kind) == "colorpicker" or string.lower(kind) == "Color" or string.lower(kind) == "Colorpicker" or string.lower(kind) == "Colour" or string.lower(kind) == "Colourpicker" or string.lower(kind) == "colourpicker" then
+								
+								cheat.label.Text = name
 								
 								cheat.value = Color3.new(1, 1, 1);
 
@@ -1395,6 +1419,8 @@ local suc, err = pcall(function()
 										cheat.value = "None"
 									end
 								end
+
+								cheat.label.Text = name
 
 								local options
 
@@ -1635,7 +1661,19 @@ local suc, err = pcall(function()
 								cheat.list.Parent = cheat.container
 
 							elseif string.lower(kind) == "textbox" or string.lower(kind) == "Textbox" then
-								local placeholdertext = data and data.placeholder
+
+								local placeholdertext
+
+								cheat.label.Text = name
+
+								if data then
+									if not data.placeholder == nil then
+										placeholdertext = data and data.placeholder
+
+									else
+										placeholdertext = "Enter a value."
+									end
+								end
 
 								cheat.background = finity:Create("ImageLabel", {
 									Name = "Background",
@@ -1705,6 +1743,9 @@ local suc, err = pcall(function()
 
 							elseif string.lower(kind) == "slider" then
                                 cheat.value = 0
+
+								cheat.label.Text = name
+
         
                                 local suffix = data.suffix or ""
                                 local minimum = data.min or 0
@@ -1917,6 +1958,9 @@ local suc, err = pcall(function()
                                 cheat.sliderbar.Parent = cheat.container
 
                             elseif string.lower(kind) == "button" then
+
+								cheat.label.Text = name
+
                                 local button_text = data and data.text
         
                                 cheat.background = finity:Create("ImageLabel", {
@@ -2280,8 +2324,10 @@ local suc, err = pcall(function()
 
 				self2.userinterface.Parent = self.gs["CoreGui"]
 			else
-				error("Could not parent Finity to the CoreGui. This is fatal.", 5) -- At any point do we not want the Gui to move to script accessable instances like 'PlayerGui'.
+				self2.userinterface:Destroy()
+				error("Could not parent Finity to the CoreGui. This is fatal.", 5)
 			end
+
 
 			self2.container.Parent = self2.userinterface
 			self2.categories.Parent = self2.container
