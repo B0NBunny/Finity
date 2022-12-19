@@ -4,9 +4,9 @@ Custom_Finity_Theme = {}
 
 Custom_Finity_Theme.CustomThemes = {
 
-	["Example"] = {
+	["Example"] = { -- this is dark mode, customize it all you want.
 
-		main_container = Color3.fromRGB(38, 38, 213),
+		main_container = Color3.fromRGB(32, 32, 33),
 		separator_color = Color3.fromRGB(63, 63, 65),
 
 		text_color = Color3.fromRGB(206, 206, 206),
@@ -15,6 +15,7 @@ Custom_Finity_Theme.CustomThemes = {
 		category_button_border = Color3.fromRGB(72, 71, 74),
 
 		checkbox_checked = Color3.fromRGB(132, 255, 130),
+		checkbox_checked_inner = Color3.fromRGB(141, 245, 139),
 		checkbox_outer = Color3.fromRGB(84, 81, 86),
 		checkbox_inner = Color3.fromRGB(132, 132, 136),
 
@@ -33,6 +34,7 @@ Custom_Finity_Theme.CustomThemes = {
 		dropdown_text = Color3.fromRGB(195, 195, 195),
 		dropdown_text_hover = Color3.fromRGB(232, 232, 232),
 		dropdown_scrollbar_color = Color3.fromRGB(118, 118, 121),
+		dropdown_scrollbar_thickness = 4,
 
 		button_background = Color3.fromRGB(103, 103, 106),
 		button_background_hover = Color3.fromRGB(137, 137, 141),
@@ -44,9 +46,9 @@ Custom_Finity_Theme.CustomThemes = {
 		notification_success = Color3.fromRGB(139, 217, 45),
 		notification_info = Color3.fromRGB(206, 206, 206),
 
-		NotifSound = "FinityGUI/assets/NotifSound.wav"
+		NotifSound = "FinityGUI/assets/NotifSound.wav",
 
-	} -- add your custom theme stuff inside here
+	},
 
 }
 
