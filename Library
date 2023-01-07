@@ -75,7 +75,7 @@ local DFAA = function()
 	makefolder('FinityGUI')
 	makefolder('FinityGUI/assets')
 	makefolder('FinityGUI/assets/custom') -- stores third part assets
-	writefile('FinityGUI/FinityDosAndDonts.txt', requestfunc(({ Url = "https://github.com/LocalSmail/Finity/raw/main/things/DosAndDont.txt", Method = "GET" })).Body)
+	writefile("FinityGUI/FinityDosAndDonts.txt", requestfunc(({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/things/DosAndDont", Method = "GET" })).Body)
 
 	-- a template for the support that is to come
 
