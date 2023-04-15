@@ -87,7 +87,7 @@ local DFAA = function()
 		writefile('FinityGUI/Customthemes.lua', requestfunc(({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/CustomThemeTemplate.lua", Method = "GET" })).Body)
 	end
 
-	for i, v in Asset_Names do
+	for i, v in pairs(Asset_Names) do
 		writefile('FinityGUI/assets/'..v, requestfunc(({ Url = "https://raw.githubusercontent.com/LocalSmail/Finity/main/assets/"..v, Method = "GET" })).Body)
 	end
 
